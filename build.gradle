@@ -1,0 +1,117 @@
+//file:noinspection VulnerableLibrariesLocal
+plugins {
+    id 'java'
+    id("io.github.goooler.shadow") version "8.1.8"
+    id 'io.freefair.lombok' version '8.6'
+    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("xyz.jpenilla.run-paper") version "2.3.0"
+    id 'maven-publish'
+}
+
+group 'bet.astral'
+version '1.0.0'
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+
+
+    // PAPI
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+
+    // Lunar client
+    maven {
+        name = 'lunarclient'
+        url = 'https://repo.lunarclient.dev'
+    }
+}
+
+var serverVersion = "1.21"
+
+var cloudVersion = "2.0.0-beta.8"
+
+var messengerVersion = "2.0.4"
+var shineVersion = "1.0.0"
+var tuplesVersion = "1.0.0"
+var cloudPlusPlusVersion = "1.2.6"
+var guiManVersion = "1.0.2"
+
+dependencies {
+    implementation 'bet.astral:messenger:'+messengerVersion
+    implementation 'bet.astral:messenger-cloud:'+messengerVersion
+    implementation 'bet.astral:messenger-paper:'+messengerVersion
+    implementation 'bet.astral:shine:'+shineVersion
+    implementation 'bet.astral:tuples:'+tuplesVersion
+    implementation 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
+    implementation 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
+    implementation 'bet.astral:guiman:'+guiManVersion
+
+
+    // LOMBOK
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+
+    // Armor Change Event
+    compileOnly 'com.jeff-media:armor-equip-event:1.0.2'
+    // More persistent data types
+    compileOnly 'com.jeff-media:MorePersistentDataTypes:2.4.0'
+    // Reflections
+    implementation 'io.github.classgraph:classgraph:4.8.165'
+    // PAPI
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+
+    implementation 'org.incendo:cloud-paper:'+cloudVersion
+    implementation 'org.incendo:cloud-brigadier:'+cloudVersion
+    implementation 'org.incendo:cloud-minecraft-extras:'+cloudVersion
+
+    // PAPER MC
+    paperweight.paperDevBundle(serverVersion+"-R0.1-SNAPSHOT")
+}
+
+shadowJar {
+    archiveClassifier = null
+    relocate 'bet.astral.messenger', 'bet.astral.unity.libs.messenger'
+    relocate 'bet.astral.tuples', 'bet.astral.unity.libs.tuples'
+    relocate 'bet.astral.shine', 'bet.astral.unity.libs.shine'
+    relocate 'bet.astral.cloudplusplus', 'bet.unity.fluffy.libs.cloudplusplus'
+    relocate 'bet.astral.guiman', 'bet.astral.unity.libs.guiman'
+    relocate 'bet.astral.signman', 'bet.astral.unity.libs.signman'
+    relocate 'io.github.classgraph', 'bet.astral.unity.classgraph'
+}
+
+jar {
+    enabled = false
+    dependsOn(shadowJar)
+}
+
+java {
+    toolchain.languageVersion.set(JavaLanguageVersion.of(21))
+}
+
+processResources {
+    def props = [version: version]
+    inputs.properties props
+    filteringCharset 'UTF-8'
+    filesMatching(['*.yml']) {
+        expand([version: version])
+    }
+}
+
+publishing {
+    publications {
+        shadow(MavenPublication) { publication ->
+            project.shadow.component(publication)
+        }
+    }
+}
+
+tasks {
+    runServer {
+        minecraftVersion(serverVersion)
+    }
+}
