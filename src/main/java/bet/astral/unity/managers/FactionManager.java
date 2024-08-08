@@ -86,6 +86,7 @@ public class FactionManager implements Manager {
 		if (faction != null) {
 			factionMap.remove(faction.getUniqueId());
 			factionNameMap.remove(faction.getName().toLowerCase());
+			unity.getTickedManager().unregister(faction);
 		}
 	}
 
@@ -97,13 +98,14 @@ public class FactionManager implements Manager {
 	@NotNull
 	public CompletableFuture<@Nullable Faction> load(UUID faction){
 		if (factionMap.get(faction)==null) {
-			return unity.getFactionDatabase().load(faction).thenApply(u -> {
-				if (u == null) {
-					return u;
+			return unity.getFactionDatabase().load(faction).thenApply(f -> {
+				if (f == null) {
+					return f;
 				}
-				factionMap.put(u.getUniqueId(), u);
-				factionNameMap.put(u.getName().toLowerCase(), u.getUniqueId());
-				return u;
+				factionMap.put(f.getUniqueId(), f);
+				factionNameMap.put(f.getName().toLowerCase(), f.getUniqueId());
+				unity.getTickedManager().register(f);
+				return f;
 			});
 		} else{
 			return CompletableFuture.completedFuture(factionMap.get(faction));

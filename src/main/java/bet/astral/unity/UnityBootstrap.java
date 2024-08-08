@@ -75,6 +75,7 @@ public class UnityBootstrap implements PluginBootstrap {
 			throw new RuntimeException(e);
 		}
 		commandRegistrer = new UnityCommandBootstrapRegistrer(messenger, afterBootstrap, context);
+		messenger.registerTo(commandRegistrer.getCommandManager());
 		new UnityCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		new DebugCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		commandRegistrer.registerCommands("bet.astral.unity.commands");

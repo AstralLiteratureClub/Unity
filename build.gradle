@@ -34,23 +34,26 @@ repositories {
 var serverVersion = "1.21"
 
 var cloudVersion = "2.0.0-beta.8"
+var cloudTranslationsVersion = "1.0.0-beta.2"
 
-var messengerVersion = "2.0.4"
+var messengerVersion = "2.0.5"
 var shineVersion = "1.0.0"
 var tuplesVersion = "1.0.0"
 var cloudPlusPlusVersion = "1.2.6"
-var guiManVersion = "1.0.2"
+var guiManVersion = "1.1.0"
 
 dependencies {
     implementation 'bet.astral:messenger:'+messengerVersion
     implementation 'bet.astral:messenger-cloud:'+messengerVersion
     implementation 'bet.astral:messenger-paper:'+messengerVersion
+    implementation 'bet.astral:messenger-bukkit:'+messengerVersion
+    implementation 'bet.astral:messenger-cloud-bukkit:'+messengerVersion
+    implementation 'bet.astral:messenger-cloud-paper:'+messengerVersion
     implementation 'bet.astral:shine:'+shineVersion
     implementation 'bet.astral:tuples:'+tuplesVersion
     implementation 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
     implementation 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
     implementation 'bet.astral:guiman:'+guiManVersion
-
 
     // LOMBOK
     compileOnly 'org.projectlombok:lombok:1.18.34'
@@ -68,6 +71,7 @@ dependencies {
     implementation 'org.incendo:cloud-paper:'+cloudVersion
     implementation 'org.incendo:cloud-brigadier:'+cloudVersion
     implementation 'org.incendo:cloud-minecraft-extras:'+cloudVersion
+    implementation 'org.incendo:cloud-translations-bukkit:'+cloudTranslationsVersion
 
     // PAPER MC
     paperweight.paperDevBundle(serverVersion+"-R0.1-SNAPSHOT")
@@ -81,7 +85,8 @@ shadowJar {
     relocate 'bet.astral.cloudplusplus', 'bet.unity.fluffy.libs.cloudplusplus'
     relocate 'bet.astral.guiman', 'bet.astral.unity.libs.guiman'
     relocate 'bet.astral.signman', 'bet.astral.unity.libs.signman'
-    relocate 'io.github.classgraph', 'bet.astral.unity.classgraph'
+    relocate 'io.github.classgraph', 'bet.astral.unity.libs.classgraph'
+    relocate 'org.incendo.cloud', 'bet.astral.unity.libs.cloud'
 }
 
 jar {

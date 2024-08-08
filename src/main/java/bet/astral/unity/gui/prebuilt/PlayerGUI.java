@@ -1,12 +1,13 @@
 package bet.astral.unity.gui.prebuilt;
 
-import bet.astral.guiman.ClickableBuilder;
 import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.messenger.v2.placeholder.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
 import bet.astral.tuples.Triplet;
 import bet.astral.unity.entity.Faction;
-import bet.astral.unity.gui.GUIHandler;
+import bet.astral.unity.gui.BaseGUI;
+import bet.astral.unity.gui.GUIBackgrounds;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -19,7 +20,7 @@ import java.util.List;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
-public class PlayerGUI extends GUIHandler implements PrebuiltGUI<Triplet<List<? extends OfflinePlayer>, Integer, Faction>> {
+public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? extends OfflinePlayer>, Integer, Faction>> {
 	@NotNull
 	private final Translation title;
 	@NotNull
@@ -49,7 +50,7 @@ public class PlayerGUI extends GUIHandler implements PrebuiltGUI<Triplet<List<? 
 	@Nullable
 	private final Consumer<Player> closeConsumer;
 
-	public PlayerGUI(@NotNull GUIHandler guiHandler,
+	public PlayerGUI(@NotNull BaseGUI guiHandler,
 	                 @NotNull Translation title,
 	                 @NotNull Translation headName, @NotNull Translation headLore,
 	                 @NotNull Translation previousPageName, @NotNull Translation previousPageLore,
@@ -98,16 +99,9 @@ public class PlayerGUI extends GUIHandler implements PrebuiltGUI<Triplet<List<? 
 		placeholders.add("pages", pages);
 
 		InventoryGUIBuilder builder = new InventoryGUIBuilder(5)
-				.name(component(player, title, placeholders))
-				.setBackground(BACKGROUND_LIGHT)
-				.setSlotClickable(maxSlots-8, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-7, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-6, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-5, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-4, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-3, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-2, BACKGROUND_DARK)
-				.setSlotClickable(maxSlots-1, BACKGROUND_DARK);
+				.messenger(getMessenger())
+				.title(component(player, title, placeholders))
+				.background(GUIBackgrounds.PLAYERS);
 		int form = currentPage == 0 ? 0 : (currentPage-1)*maxSlots;
 		int to = currentPage == 0 ? maxSlots : currentPage*maxSlots;
 		boolean lastPage;
@@ -124,40 +118,47 @@ public class PlayerGUI extends GUIHandler implements PrebuiltGUI<Triplet<List<? 
 		List<? extends OfflinePlayer> subList = players.subList(form, to);
 
 		for (OfflinePlayer offlinePlayer : subList) {
-			builder.addSlotClickable(i, new ClickableBuilder(Material.PLAYER_HEAD, meta -> {
+			builder.addClickable(i, new ClickableBuilder(Material.PLAYER_HEAD, meta -> {
 						meta.setPlayerProfile(offlinePlayer.getPlayerProfile());
 						PlaceholderList playerPlaceholders = new PlaceholderList(placeholders(offlinePlayer, faction));
 						playerPlaceholders.addAll(placeholders);
-						meta.displayName(component(player, headName, placeholders));
-						meta.lore(lore(player, headLore, placeholders));
+						meta.displayName(component(player, headName, playerPlaceholders));
+						meta.lore(lore(player, headLore, playerPlaceholders));
 					}, SkullMeta.class)
-							.setGeneralAction((clickable, itemStack, player1) -> clickConsumer.accept(player1, offlinePlayer))
+					.actionGeneral((clickable, itemStack, player1) -> clickConsumer.accept(player1, offlinePlayer))
+					.priority(100)
 			);
 			i++;
 		}
 
 		builder
-				.addSlotClickable(36, new ClickableBuilder(Material.ARROW, meta -> {
+				.addClickable(maxSlots-9, new ClickableBuilder(Material.ARROW, meta -> {
 							meta.displayName(component(player, previousPageName, placeholders));
 							meta.lore(lore(player, previousPageLore, placeholders));
-						}).setPriority(10)
-								.setPermission(bet.astral.guiman.permission.Permission.of(p -> !firstPage))
-								.setDisplayIfNoPermissions(false)
+						})
+						.priority(10)
+						.permission(bet.astral.guiman.permission.Permission.of(p -> !firstPage))
+						.displayIfNoPermissions()
+						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage-1)))
+						.priority(100)
 				)
-				.setSlotClickable(40, new ClickableBuilder(Material.BARRIER, meta -> {
+				.clickable(maxSlots-5, new ClickableBuilder(Material.BARRIER, meta -> {
 					meta.displayName(component(player, returnName, placeholders));
 					meta.lore(lore(player, returnLore, placeholders));
-				}).setGeneralAction((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
+				}).actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
 
-				.addSlotClickable(44, new ClickableBuilder(Material.ARROW, meta -> {
+				.addClickable(maxSlots, new ClickableBuilder(Material.ARROW, meta -> {
 							meta.displayName(component(player, nextPageName, placeholders));
 							meta.lore(lore(player, nextPageLore, placeholders));
-						}).setPriority(10)
-								.setPermission(bet.astral.guiman.permission.Permission.of(p -> !lastPage))
-								.setDisplayIfNoPermissions(false)
+						})
+						.priority(10)
+						.permission(bet.astral.guiman.permission.Permission.of(p -> !lastPage))
+						.displayIfNoPermissions()
+						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage+1)))
+						.priority(100)
 				);
 
-		builder.setOpenConsumer(openConsumer).setCloseConsumer(closeConsumer);
+		builder.openConsumer(openConsumer).closeConsumer(closeConsumer);
 
 		return builder;
 	}

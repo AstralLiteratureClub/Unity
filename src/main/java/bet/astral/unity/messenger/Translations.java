@@ -2,6 +2,7 @@ package bet.astral.unity.messenger;
 
 import bet.astral.messenger.v2.component.ComponentType;
 import bet.astral.messenger.v2.translation.Translation;
+import com.sun.jna.platform.unix.solaris.LibKstat;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -30,16 +31,27 @@ public class Translations {
 	public static final Translation ROLE_GUEST_NAME = new Translation("roles.guest.name").add(ComponentType.CHAT, text("Guest"));
 	public static final Translation ROLE_GUEST_PREFIX = new Translation("roles.guest.prefix").add(ComponentType.CHAT, text("<gray>"));
 	public static final Translation ROLE_GUEST_PREFIX_PLAYER = new Translation("roles.guest.prefix").add(ComponentType.CHAT, text("<gray>%player%"));
+	public static final Translation ARGUMENT_CANNOT_USE_COMMAND = new Translation("parsers.global.cannot-use-command").add(ComponentType.CHAT, text("You cannot use this command!"));
+	public static final Translation ARGUMENT_REQUIRE_FACTION = new Translation("parsers.global.needs-faction").add(ComponentType.CHAT, text("You need a faction to use this command!"));
+	public static final Translation ARGUMENT_PLAYER_NOT_IN_SAME_FACTION = new Translation("parsers.member.player-not-in-same-faction").add(ComponentType.CHAT, text("<white>%player% <red>is not a member of your faction"));
+	public static final Translation ARGUMENT_PLAYER_IN_SAME_FACTION = new Translation("parsers.member.player-not-in-same-faction").add(ComponentType.CHAT, text("<white>%player% <red>is a member of your faction"));
+	public static final Translation ARGUMENT_PLAYER_ALREADY_INVITED = new Translation("parsers.invitable.already-invited").add(ComponentType.CHAT, text("<white>%player% <red>is already invited to the faction"));
+	public static final Translation ARGUMENT_PLAYER_NOT_INVITED = new Translation("parsers.invited.not-invited").add(ComponentType.CHAT, text("<white>%player% <red>is not invited to the faction"));
 	public static final Translation COMMAND_FACTION_DESCRIPTION = new Translation("commands.faction.description").add(ComponentType.CHAT, text("The root command for factions"));
 	public static final Translation COMMAND_FACTION_CREATE_DESCRIPTION = new Translation("commands.faction.create.description").add(ComponentType.CHAT, text("Allows players to create factions"));
 	public static final Translation COMMAND_FACTION_CREATE_NAME_DESCRIPTION = new Translation("commands.faction.create.name-description").add(ComponentType.CHAT, text("The name of the faction"));
 	public static final Translation COMMAND_FACTION_MEMBERS_DESCRIPTION = new Translation("commands.faction.members.description").add(ComponentType.CHAT, text("Allows player to see members of the faction"));
 	public static final Translation COMMAND_FACTION_BAN_DESCRIPTION = new Translation("commands.faction.ban.description").add(ComponentType.CHAT, text("Allows player to ban players from the faction"));
 	public static final Translation COMMAND_FACTION_KICK_DESCRIPTION = new Translation("commands.faction.kick.description").add(ComponentType.CHAT, text("Allows player to kick members from the faction"));
+	public static final Translation COMMAND_FACTION_INVITE_DESCRIPTION = new Translation("commands.faction.invite.description").add(ComponentType.CHAT, text("Allows player to invite players to the faction"));
 	public static final Translation COMMAND_FACTION_DEBUG_DESCRIPTION = new Translation("commands.faction.debug.description").add(ComponentType.CHAT, text("Debug commands of unity"));
 	public static final Translation COMMAND_FACTION_DEBUG_GUI_SLOTS_DESCRIPTION = new Translation("commands.faction.debug.slots-description").add(ComponentType.CHAT, text("Shows inventor slots of the game's inventories"));
 	public static final Translation COMMAND_FACTION_DEBUG_SIGN_DESCRIPTION = new Translation("commands.faction.debug.sign.description").add(ComponentType.CHAT, text("Opens a sign gui which returns all sign lines when closed"));
 	public static final Translation COMMAND_FACTION_DEBUG_FORCE_LOAD = new Translation("commands.faction.debug.force-load.description").add(ComponentType.CHAT, text("Allows force (re)loading of factions and players"));
+
+	public static final Translation GUI_BUTTON_COMING_SOON_NAME = new Translation("gui.shared.coming-soon.name").add(ComponentType.CHAT, text("<!italic><red>Coming soon..."));
+	public static final Translation GUI_BUTTON_COMING_SOON_LORE = new Translation("gui.shared.coming-soon.lore").add(ComponentType.CHAT, text("<!italic><gray>Suggest ideas what could be used here."));
+	public static final Translation MESSAGE_COMING_SOON = new Translation("message.shared.coming-soon").add(ComponentType.CHAT, text("<gray>Suggest ideas for factions using <white>/factions suggest <suggestion>"));
 
 	public static final Translation GUI_FACTION = new Translation("gui.faction.title").add(ComponentType.CHAT, text("<aqua>%player% <dark_gray>(<dark_aqua>%faction%<dark_gray>)"));
 	public static final Translation GUI_NO_FACTION = new Translation("gui.no-faction.title").add(ComponentType.CHAT, text("<!italic><dark_aqua>%player%"));
@@ -47,6 +59,7 @@ public class Translations {
 	public static final Translation GUI_FACTION_MEMBER_MANAGE = new Translation("gui.faction.member-manage.title").add(ComponentType.CHAT, text("<!italic><aqua>%player%"));
 	public static final Translation GUI_FACTION_KICK = new Translation("gui.faction.kick.title").add(ComponentType.CHAT, text("<!italic><aqua>Confirm <dark_aqua>%player%<aqua>'s kick"));
 	public static final Translation GUI_FACTION_BAN = new Translation("gui.faction.ban.title").add(ComponentType.CHAT, text("<!italic><aqua>Confirm <dark_aqua>%player%<aqua>'s ban"));
+	public static final Translation GUI_FACTION_INVITE = new Translation("gui.faction.invite.title").add(ComponentType.CHAT, text("<!italic><aqua>Invite <dark_gray>(<dark_aqua>%page%<dark_gray>/<dark_aqua>%pages%<dark_gray>)"));
 	public static final Translation GUI_BUTTON_USER_INFO_FACTION_NAME = new Translation("gui.faction.user.name").add(ComponentType.CHAT, text("<yellow><!italic>%player%"));
 	public static final Translation GUI_BUTTON_USER_INFO_NO_FACTION_NAME = new Translation("gui.no-faction.user.name").add(ComponentType.CHAT, text("<yellow><!italic>%player%"));
 	public static final Translation GUI_BUTTON_USER_INFO_FACTION_DESCRIPTION = new Translation("gui.faction.user.description").add(ComponentType.CHAT,
@@ -65,24 +78,35 @@ public class Translations {
 					<gray><!italic> - <yellow>Min length: <white>%configuration_faction_name_min_length%<reset>
 					<gray><!italic> - <yellow>Characters: <white>A<yellow>→<white>Z<gray>, <white>a<yellow>→<white>z<gray>, <white>0<yellow>→<white>9<gray>, <white>_""")
 	);
-	public static final Translation GUI_BUTTON_MEMBERS_NAME = new Translation("gui.faction.members.name").add(ComponentType.CHAT, text("<!italic><yellow>Members"));
-	public static final Translation GUI_BUTTON_MEMBERS_DESCRIPTION = new Translation("gui.faction.members.description").add(ComponentType.CHAT, text("<gray><!italic>Click to see current faction members"));
-	public static final Translation GUI_BUTTON_MEMBERS_FACTION_MENU_NAME = new Translation("gui.faction.members.button.faction-menu.name").add(ComponentType.CHAT, text("<red><!italic>Return"));
-	public static final Translation GUI_BUTTON_MEMBERS_FACTION_MENU_DESCRIPTION = new Translation("gui.faction.members.button.faction-menu.description").add(ComponentType.CHAT, text("<gray><!italic>Click to return back to the main faction menu"));
+	public static final Translation GUI_BUTTON_FACTION_MEMBERS_NAME = new Translation("gui.faction.button.members.name").add(ComponentType.CHAT, text("<!italic><yellow>Members"));
+	public static final Translation GUI_BUTTON_FACTION_MEMBERS_DESCRIPTION = new Translation("gui.faction.button.members.description").add(ComponentType.CHAT, text("<gray><!italic>Click to see current faction members"));
+
+	public static final Translation GUI_BUTTON_MEMBERS_RETURN_NAME = new Translation("gui.faction.members.button.faction-menu.name").add(ComponentType.CHAT, text("<red><!italic>Return"));
+	public static final Translation GUI_BUTTON_MEMBERS_RETURN_DESCRIPTION = new Translation("gui.faction.members.button.faction-menu.description").add(ComponentType.CHAT, text("<gray><!italic>Click to return back to the main faction menu"));
 	public static final Translation GUI_BUTTON_MEMBERS_MEMBER_NAME = new Translation("gui.faction.members.button.member.name").add(ComponentType.CHAT, text("<yellow><!italic>%player%"));
 	public static final Translation GUI_BUTTON_MEMBERS_MEMBER_DESCRIPTION = new Translation("gui.faction.members.button.member.cannot-manage-description").add(ComponentType.CHAT, text("<yellow><!italic>"));
-	public static final Translation GUI_BUTTON_MEMBERS_MEMBER_CAN_MODIFY_DESCRIPTION = new Translation("gui.faction.members.button.member.manage-description").add(ComponentType.CHAT, text("<yellow><!italic>"));
 	public static final Translation GUI_BUTTON_MEMBERS_PREVIOUS_PAGE_NAME = new Translation("gui.faction.members.button.previous-page.name").add(ComponentType.CHAT, text("<yellow><!italic>Previous Page"));
 	public static final Translation GUI_BUTTON_MEMBERS_PREVIOUS_PAGE_DESCRIPTION = new Translation("gui.faction.members.button.previous-page.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go previous page"));
 	public static final Translation GUI_BUTTON_MEMBERS_NEXT_PAGE_NAME = new Translation("gui.faction.members.button.next-page.name").add(ComponentType.CHAT, text("<yellow>Next Page"));
 	public static final Translation GUI_BUTTON_MEMBERS_NEXT_PAGE_DESCRIPTION = new Translation("gui.faction.members.button.next-page.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go next page"));
 
+	public static final Translation GUI_BUTTON_FACTION_INVITE_NAME = new Translation("gui.faction.button.invite.name").add(ComponentType.CHAT, text("<!italic><yellow>Invite Players"));
+	public static final Translation GUI_BUTTON_FACTION_INVITE_DESCRIPTION = new Translation("gui.faction.button.invite.description").add(ComponentType.CHAT, text("<gray><!italic>Click to invite players to the faction"));
+	public static final Translation GUI_BUTTON_INVITE_RETURN_NAME = new Translation("gui.faction.invite.button.faction-menu.name").add(ComponentType.CHAT, text("<red><!italic>Return"));
+	public static final Translation GUI_BUTTON_INVITE_RETURN_DESCRIPTION = new Translation("gui.faction.invite.button.faction-menu.description").add(ComponentType.CHAT, text("<gray><!italic>Click to return back to the main faction menu"));
+	public static final Translation GUI_BUTTON_INVITE_PLAYER_NAME = new Translation("gui.faction.invite.button.player.name").add(ComponentType.CHAT, text("<yellow><!italic>%player%"));
+	public static final Translation GUI_BUTTON_INVITE_PLAYER_DESCRIPTION = new Translation("gui.faction.invite.button.player.description").add(ComponentType.CHAT, text("<gray><!italic>Click to invite <white>%player%<gray> to the faction"));
+	public static final Translation GUI_BUTTON_INVITE_PREVIOUS_PAGE_NAME = new Translation("gui.faction.invite.button.previous-page.name").add(ComponentType.CHAT, text("<yellow><!italic>Previous Page"));
+	public static final Translation GUI_BUTTON_INVITE_PREVIOUS_PAGE_DESCRIPTION = new Translation("gui.faction.invite.button.previous-page.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go previous page"));
+	public static final Translation GUI_BUTTON_INVITE_NEXT_PAGE_NAME = new Translation("gui.faction.invite.button.next-page.name").add(ComponentType.CHAT, text("<yellow>Next Page"));
+	public static final Translation GUI_BUTTON_INVITE_NEXT_PAGE_DESCRIPTION = new Translation("gui.faction.invite.button.next-page.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go next page"));
+
 	public static final Translation GUI_BUTTON_MEMBER_MANAGE_KICK_NAME = new Translation("gui.faction.manage-member.button.kick.name").add(ComponentType.CHAT, text("<red><!italic>Kick"));
 	public static final Translation GUI_BUTTON_MEMBER_MANAGE_KICK_DESCRIPTION = new Translation("gui.faction.manage-member.button.kick.description").add(ComponentType.CHAT, text("<gray><!italic>Click to kick <white>%player%<gray> from the faction"));
 	public static final Translation GUI_BUTTON_MEMBER_MANAGE_BAN_NAME = new Translation("gui.faction.manage-member.button.ban.name").add(ComponentType.CHAT, text("<red><!italic>Ban"));
 	public static final Translation GUI_BUTTON_MEMBER_MANAGE_BAN_DESCRIPTION = new Translation("gui.faction.manage-member.button.ban.description").add(ComponentType.CHAT, text("<gray><!italic>Click to ban <white>%player%<gray> from the faction"));
-	public static final Translation GUI_BUTTON_MEMBERS_RETURN_NAME = new Translation("gui.faction.manage-member.button.return.name").add(ComponentType.CHAT, text("<yellow><!italic>Return"));
-	public static final Translation GUI_BUTTON_MEMBERS_RETURN_DESCRIPTION = new Translation("gui.faction.manage-member.button.return.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go back to the members menu"));
+	public static final Translation GUI_BUTTON_MEMBER_MANAGE_RETURN_NAME = new Translation("gui.faction.manage-member.button.return.name").add(ComponentType.CHAT, text("<yellow><!italic>Return"));
+	public static final Translation GUI_BUTTON_MEMBER_MANAGE_RETURN_DESCRIPTION = new Translation("gui.faction.manage-member.button.return.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go back to the members menu"));
 
 	public static final Translation GUI_BUTTON_KICK_RETURN_NAME = new Translation("gui.faction.kick.button.return.name").add(ComponentType.CHAT, text("<yellow><!italic>Return"));
 	public static final Translation GUI_BUTTON_KICK_RETURN_LORE = new Translation("gui.faction.kick.button.return.description").add(ComponentType.CHAT, text("<gray><!italic>Click to go back to member management menu"));
@@ -141,6 +165,13 @@ public class Translations {
 	public static final Translation BROADCAST_FACTION_BAN_BANNED = new Translation("ban.error.gui.faction-info").add(ComponentType.CHAT, text("<white>%who%<green> was kicked from the faction by <white>%player%<green> due to <white>%reason%"));
 
 	public static final Translation MESSAGE_PLAYER_PLAYER_IS_NOT_A_CLAN_MEMBER = new Translation("global.error.player-is-not-clan-member").add(ComponentType.CHAT, text("<white>%who% <red>is not inside your faction."));
+
+	public static final Translation MESSAGE_FACTION_INVITE_NOT_ONLINE = new Translation("invite.error.gui.not-online").add(ComponentType.CHAT, text("<red>You cannot invite <white>%player% <red>because they are not online."));
+	public static final Translation MESSAGE_FACTION_INVITE_RECEIVE = new Translation("invite.success.shared.received").add(ComponentType.CHAT, text("<green>You have received an faction invitation from <white>%faction%"));
+	public static final Translation MESSAGE_FACTION_INVITE_SENT = new Translation("invite.success.shared.sent").add(ComponentType.CHAT, text("<green>You have sent join invitation to <white>%who%"));
+	public static final Translation BROADCAST_FACTION_INVITE_SENT = new Translation("invite.success.shared.sent.broadcast").add(ComponentType.CHAT, text("<white>%player% <green> has sent join invitation to <white>%who%"));
+	public static final Translation MESSAGE_FACTION_INVITE_EXPIRE = new Translation("invite.error.shared.expired.player").add(ComponentType.CHAT, text("<red>Your invitation to <white>%faction%<red> has expired"));
+	public static final Translation BROADCAST_FACTION_INVITE_EXPIRE = new Translation("invite.error.shared.expired.faction").add(ComponentType.CHAT, text("<red>Invitation to <white>%player%<red> has expired"));
 
 	/**
 	 * Returns all translation keys used by unity.

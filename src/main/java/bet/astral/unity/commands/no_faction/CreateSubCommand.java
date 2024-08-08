@@ -1,4 +1,4 @@
-package bet.astral.unity.commands.faction;
+package bet.astral.unity.commands.no_faction;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.messenger.v2.placeholder.PlaceholderList;
@@ -97,7 +97,7 @@ public class CreateSubCommand extends UnityCommand {
 				unity().getMessenger().broadcast(Translations.BROADCAST_FACTION_CREATED, placeholders);
 
 				if (openMenu){
-					unity().getFactionGUI().openFactionMenu(p);
+					unity().getGuiHandler().openMainMenu(p);
 				}
 			}
 		});

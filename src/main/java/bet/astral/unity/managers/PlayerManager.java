@@ -59,10 +59,10 @@ public class PlayerManager implements Listener, Manager {
 								if (player == null) {
 									player = new Player(uniqueId);
 								}
-								if (player.getFactionId() != null && !unity.getFactionManager().isLoaded(player.getFactionId())) {
+								if (player.getFactionIdIgnoreChecks() != null && !unity.getFactionManager().isLoaded(player.getFactionIdIgnoreChecks())) {
 									@org.jetbrains.annotations.Nullable Player finalPlayer = player;
 									unity.getFactionDatabase()
-											.load(player.getFactionId()).thenAccept(f -> {
+											.load(player.getFactionIdIgnoreChecks()).thenAccept(f -> {
 												if (f == null) {
 													finalPlayer.setFactionId(null);
 													return;

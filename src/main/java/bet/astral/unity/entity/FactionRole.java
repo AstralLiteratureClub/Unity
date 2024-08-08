@@ -19,15 +19,15 @@ public class FactionRole implements Entity {
 	private final int priority;
 	private final Set<Permission> permissions;
 	public final static FactionRole OWNER = new FactionRoleBuilder(UUID.fromString("1aa5544c-516c-11ef-9454-0242ac120002"), Translations.ROLE_OWNER_NAME, Translations.ROLE_OWNER_PREFIX, Translations.ROLE_OWNER_PREFIX_PLAYER)
-			.permissions(Permission.KICK_MEMBERS, Permission.BAN_PLAYERS)
+			.permissions(Permission.KICK_MEMBERS, Permission.BAN_PLAYERS, Permission.INVITE)
 			.priority(50)
 			.build();
 	public final static FactionRole ADMINISTRATOR = new FactionRoleBuilder(UUID.fromString("3644de5c-516c-11ef-9454-0242ac120002"), Translations.ROLE_ADMIN_NAME, Translations.ROLE_ADMIN_PREFIX, Translations.ROLE_ADMIN_PREFIX_PLAYER)
-			.permissions(Permission.KICK_MEMBERS, Permission.BAN_PLAYERS)
+			.permissions(Permission.KICK_MEMBERS, Permission.BAN_PLAYERS, Permission.INVITE)
 			.priority(20)
 			.build();
 	public final static FactionRole MODERATOR = new FactionRoleBuilder(UUID.fromString("3644e0be-516c-11ef-9454-0242ac120002"), Translations.ROLE_MOD_NAME, Translations.ROLE_MOD_PREFIX, Translations.ROLE_MOD_PREFIX_PLAYER)
-			.permissions(Permission.KICK_MEMBERS)
+			.permissions(Permission.KICK_MEMBERS, Permission.INVITE)
 			.priority(10)
 			.build();
 	public final static FactionRole MEMBER = new FactionRoleBuilder(UUID.fromString("3644e1f4-516c-11ef-9454-0242ac120002"), Translations.ROLE_MEMBER_NAME, Translations.ROLE_MEMBER_PREFIX, Translations.ROLE_MEMBER_PREFIX_PLAYER)

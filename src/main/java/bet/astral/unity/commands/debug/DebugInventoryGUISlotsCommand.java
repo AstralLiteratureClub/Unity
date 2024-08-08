@@ -1,7 +1,7 @@
 package bet.astral.unity.commands.debug;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
-import bet.astral.guiman.ClickableBuilder;
+import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.guiman.InventoryGUI;
 import bet.astral.guiman.InventoryGUIBuilder;
 import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
@@ -67,7 +67,7 @@ public class DebugInventoryGUISlotsCommand extends DebugCommand {
 								return;
 							}
 							if (guis.get(type) != null){
-								guis.get(type).generateInventory(player);
+								guis.get(type).open(player);
 								return;
 							}
 							Inventory inventory;
@@ -81,24 +81,23 @@ public class DebugInventoryGUISlotsCommand extends DebugCommand {
 								inventory = Bukkit.createInventory(null, type);
 							}
 
-							builder.name(Component.text("GUI Slots ("+ type+")"));
+							builder.title(Component.text("GUI Slots ("+ type+")"));
 							for (int i = 1; i < inventory.getSize(); i++){
 								ItemStack itemStack = ItemStack.of(Material.GRAY_STAINED_GLASS_PANE);
 								int finalI = i;
 								itemStack.editMeta(meta-> meta.displayName(Component.text(finalI).decoration(TextDecoration.ITALIC, false)));
 								itemStack.setAmount(i);
-								builder.addSlotClickable(i, new ClickableBuilder(itemStack).setGeneralAction(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ finalI))));
+								builder.addClickable(i, new ClickableBuilder(itemStack).actionGeneral(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ finalI))));
 							}
 							ItemStack itemStack = ItemStack.of(Material.RED_STAINED_GLASS_PANE);
 							itemStack.editMeta(meta-> meta.displayName(Component.text(0).decoration(TextDecoration.ITALIC, false)));
 							itemStack.setAmount(1);
-							builder.addSlotClickable(0, new ClickableBuilder(itemStack).setGeneralAction(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ 0))));
+							builder.addClickable(0, new ClickableBuilder(itemStack).actionGeneral(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ 0))));
 
 							InventoryGUI gui = builder.build();
-							gui.shared = true;
 							guis.put(type, gui);
 
-							gui.generateInventory(player);
+							gui.open(player);
 						})
 		).register();
 	}

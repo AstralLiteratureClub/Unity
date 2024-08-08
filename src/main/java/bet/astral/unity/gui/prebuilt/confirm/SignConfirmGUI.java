@@ -1,12 +1,12 @@
 package bet.astral.unity.gui.prebuilt.confirm;
 
-import bet.astral.guiman.ClickableBuilder;
 import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.messenger.v2.placeholder.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
 import bet.astral.signman.SignGUI;
 import bet.astral.signman.SignGUIBuilder;
-import bet.astral.unity.gui.GUIHandler;
+import bet.astral.unity.gui.BaseGUI;
 import bet.astral.unity.gui.prebuilt.PrebuiltGUI;
 import lombok.Getter;
 import org.bukkit.Material;
@@ -23,7 +23,7 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 	private final Translation confirmSignItemName;
 	private final Translation confirmSignItemLore;
 
-	public SignConfirmGUI(@NotNull GUIHandler guiHandler, @NotNull Translation menuName,
+	public SignConfirmGUI(@NotNull BaseGUI base, @NotNull Translation menuName,
 	                      @NotNull Translation confirmItemName, @NotNull Translation confirmItemLore,
 	                      @NotNull Translation confirmSignItemName, @NotNull Translation confirmSignItemLore,
 	                      @NotNull Translation cancelItemName, @NotNull Translation cancelItemLore,
@@ -34,7 +34,7 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 	                      @NotNull Consumer<Player> returnConsumer,
 	                      @Nullable Consumer<Player> openConsumer,
 	                      @Nullable Consumer<Player> closeConsumer) {
-		super(guiHandler, menuName,
+		super(base, menuName,
 				confirmItemName, confirmItemLore,
 				cancelItemName, cancelItemLore,
 				returnItemName, returnItemLore,
@@ -48,7 +48,8 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 		this.confirmSignItemName = confirmSignItemName;
 		this.confirmSignItemLore = confirmSignItemLore;
 	}
-	public SignConfirmGUI(@NotNull GUIHandler guiHandler, @NotNull Translation menuName,
+
+	public SignConfirmGUI(@NotNull BaseGUI guiHandler, @NotNull Translation menuName,
 	                      @NotNull Translation confirmItemName, @NotNull Translation confirmItemLore,
 	                      @NotNull Translation confirmSignItemName, @NotNull Translation confirmSignItemLore,
 	                      @NotNull Translation cancelItemName, @NotNull Translation cancelItemLore,
@@ -74,21 +75,23 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 
 	@Override
 	public void open(Player player, PlaceholderList placeholders) {
-		generateGUI(player, null, placeholders).build().generateInventory(player);
+		generateGUI(player, null, placeholders).build().open(player);
 	}
 
 	@Override
 	public InventoryGUIBuilder generateGUI(Player player, Object obj, PlaceholderList placeholders) {
-		ClickableBuilder confirm = new ClickableBuilder(gui.getMaterial().getMaterial(gui.getSignSize()), meta->{
+		ClickableBuilder confirm = new ClickableBuilder(gui.getMaterial().getMaterial(gui.getSignSize()), meta -> {
 			meta.setCustomModelData(444444440);
 			meta.displayName(component(player, confirmSignItemName, placeholders));
 			meta.lore(lore(player, confirmSignItemLore, placeholders));
-		}).setGeneralAction((clickable, itemStack, player1) -> gui.open(player1));
+		})
+				.actionGeneral((clickable, itemStack, player1) -> gui.open(player1))
+				.priority(100);
 
 
 		return super.generateGUI(player, obj, placeholders)
-				.setSlotClickable(2, confirm)
-				.setSlotClickable(3, confirm)
+				.addClickable(2, confirm)
+				.addClickable(3, confirm)
 				;
 	}
 }

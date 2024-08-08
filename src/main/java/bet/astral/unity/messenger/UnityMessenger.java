@@ -1,5 +1,8 @@
 package bet.astral.unity.messenger;
 
+import bet.astral.messenger.v2.cloud.CaptionMessenger;
+import bet.astral.messenger.v2.cloud.CloudMessenger;
+import bet.astral.messenger.v2.cloud.paper.locale.CommandSenderLocaleExtractor;
 import bet.astral.messenger.v2.paper.PaperMessenger;
 import bet.astral.messenger.v2.paper.receiver.PlayerReceiver;
 import bet.astral.messenger.v2.placeholder.Placeholder;
@@ -7,11 +10,15 @@ import bet.astral.messenger.v2.placeholder.PlaceholderList;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.entity.FactionMember;
 import org.bukkit.OfflinePlayer;
+import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
-public class UnityMessenger extends PaperMessenger {
+public class UnityMessenger extends PaperMessenger implements CloudMessenger, CaptionMessenger<CommandSender> {
 	private static final OfflinePlayerReceiver OFFLINE_RECEIVER = new OfflinePlayerReceiver();
+	private static final CommandSenderLocaleExtractor localeExtractor = new CommandSenderLocaleExtractor();
 	private Logger logger;
 	public UnityMessenger() {
 		super(null);
@@ -27,17 +34,24 @@ public class UnityMessenger extends PaperMessenger {
 		});
 	}
 
-	public static PlaceholderList placeholders(Player player, Faction faction) {
+	public static PlaceholderList placeholders(@NotNull OfflinePlayer player, @Nullable Faction faction) {
 		PlaceholderList placeholders = new PlaceholderList();
-		placeholders.add("player", player.name());
-		placeholders.add("faction", faction.getName());
-		placeholders.add("faction_id", faction.getUniqueId().toString());
-		placeholders.add(Placeholder.date("faction_first_created", faction.getFirstCreated()));
-		FactionMember member = faction.getMember(player.getUniqueId());
-		placeholders.add(Placeholder.date("faction_first_joined", member.getFirstJoined()));
-
+		placeholders.add("player", player.getName());
+		if (faction != null) {
+			placeholders.add("faction", faction.getName());
+			placeholders.add("faction_id", faction.getUniqueId().toString());
+			placeholders.add(Placeholder.date("faction_first_created", faction.getFirstCreated()));
+			FactionMember member = faction.getMember(player.getUniqueId());
+			placeholders.add(Placeholder.date("faction_first_joined", member.getFirstJoined()));
+		} else {
+			placeholders.add("faction", "none");
+			placeholders.add("faction_id", "none");
+			placeholders.add("faction_first_created", "never");
+			placeholders.add("faction_first_joined", "never");
+		}
 		return placeholders;
 	}
+
 	@Override
 	public Logger getLogger() {
 		return logger;
@@ -60,5 +74,10 @@ public class UnityMessenger extends PaperMessenger {
 	 */
 	public PlayerReceiver asReceiver(Player player){
 		return playerManager.players.get(player.getUniqueId());
+	}
+
+	@Override
+	public org.incendo.cloud.translations.@NotNull LocaleExtractor<CommandSender> getLocaleExtractor() {
+		return localeExtractor;
 	}
 }

@@ -38,7 +38,7 @@ public class KickSubCommand extends UnityCommand {
 	public void init() {
 		command(factionRoot, "kick", Translations.COMMAND_FACTION_KICK_DESCRIPTION,
 				b->
-						b.permission(requireFaction("unity.kick"))
+						b.permission(requireFaction("unity.kick").and(Permission.KICK_MEMBERS))
 								.senderType(Player.class)
 								.argument(MemberParser.memberComponent().name("player"))
 								.optional(StringParser.stringComponent(StringParser.StringMode.GREEDY).name("reason"))
@@ -48,7 +48,7 @@ public class KickSubCommand extends UnityCommand {
 									String reason = context.getOrDefault("reason", null);
 									handle(sender, player, reason != null ? List.of(reason) : null, false);
 								})
-		);
+		).register();
 	}
 
 	@Contract(pure = true)
@@ -60,12 +60,12 @@ public class KickSubCommand extends UnityCommand {
 		bet.astral.unity.entity.Player fPlayer = unity().getPlayerManager().fromBukkit(player);
 		if (fPlayer.getFactionId() == null) {
 			if (openMenu)
-				unity().getFactionGUI().openMainMenu(player);
+				unity().getGuiHandler().openMainMenu(player);
 			return;
 		}
 		Faction faction = unity().getFactionManager().get(fPlayer.getFactionId());
 		if (faction == null) {
-			if (openMenu) unity().getFactionGUI().openMainMenu(player);
+			if (openMenu) unity().getGuiHandler().openMainMenu(player);
 			return;
 		}
 		UUID kickingId = kicking.getUniqueId();
@@ -78,7 +78,8 @@ public class KickSubCommand extends UnityCommand {
 		FactionMember kickingMember = faction.getMember(kickingId);
 		if (kickingMember == null) {
 			if (openMenu) {
-				unity().getFactionGUI()
+				unity().getGuiHandler()
+						.getFactionGUI()
 						.getMembersGUI()
 						.openMembers(player, faction);
 			}
@@ -89,7 +90,8 @@ public class KickSubCommand extends UnityCommand {
 			if (!member.getRole().canKick(kickingMember.getRole())) {
 				unity().message(player, Translations.MESSAGE_FACTION_KICK_CANNOT_KICK_USER, placeholders);
 				if (openMenu)
-					unity().getFactionGUI()
+					unity().getGuiHandler()
+							.getFactionGUI()
 							.getMembersGUI()
 							.openMemberManage(player, Bukkit.getOfflinePlayer(kickingId), faction);
 				return;
@@ -112,7 +114,8 @@ public class KickSubCommand extends UnityCommand {
 		} else {
 			unity().message(player, Translations.MESSAGE_FACTION_KICK_NO_PERMISSIONS, placeholders);
 			if (openMenu)
-				unity().getFactionGUI()
+				unity().getGuiHandler()
+						.getFactionGUI()
 						.getMembersGUI()
 						.openMemberManage(player, Bukkit.getOfflinePlayer(kickingId), faction);
 		}

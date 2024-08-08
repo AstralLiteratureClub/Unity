@@ -17,20 +17,18 @@ public class Player implements Entity {
 		this.uniqueId = uniqueId;
 	}
 
+	public UUID getFactionIdIgnoreChecks(){
+		return factionId;
+	}
 	public UUID getFactionId() {
-		if (factionId == null){
-			System.out.println("Null id");
-		} else {
+		if (factionId != null) {
 			Faction faction = unity.getFactionManager().get(factionId);
 			if (faction == null) {
-				System.out.println("Null");
 				return null;
 			}
 			if (faction.getMember(uniqueId) == null){
-				System.out.println("Null member");
 				return null;
 			}
-			System.out.println("True");
 			return factionId;
 		}
 		return null;

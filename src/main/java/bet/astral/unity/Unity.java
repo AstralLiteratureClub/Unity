@@ -12,11 +12,15 @@ import bet.astral.unity.data.FactionInfoDatabase;
 import bet.astral.unity.data.PlayerDatabase;
 import bet.astral.unity.data.gson.GsonFactionDatabase;
 import bet.astral.unity.data.gson.GsonPlayerDatabase;
-import bet.astral.unity.gui.FactionGUI;
+import bet.astral.unity.events.EventManager;
+import bet.astral.unity.gui.GUIHandler;
 import bet.astral.unity.managers.FactionManager;
 import bet.astral.unity.managers.PlayerManager;
+import bet.astral.unity.managers.TickedManager;
 import bet.astral.unity.messenger.GlobalPlaceholderValue;
 import bet.astral.unity.messenger.UnityMessenger;
+import bet.astral.unity.shared.FactionMethods;
+import lombok.AccessLevel;
 import lombok.Getter;
 import org.bukkit.event.Listener;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,23 +30,28 @@ import org.jetbrains.annotations.NotNull;
 public final class Unity extends JavaPlugin implements MessageSender.Packed {
 	private final UnityMessenger messenger;
 	private Shine shine;
-	private final BootstrapHandler handler;
+	@Getter(AccessLevel.NONE)
+	private final BootstrapHandler bootstrapHandler;
 	private final FactionDatabase factionDatabase = new GsonFactionDatabase(this);
 	private final FactionInfoDatabase factionInfoDatabase = (GsonFactionDatabase) factionDatabase;
 	private final PlayerDatabase playerDatabase = new GsonPlayerDatabase(this);
 	private final FactionManager factionManager = new FactionManager(this);
 	private final PlayerManager playerManager = new PlayerManager(this);
-	private final FactionGUI factionGUI = new FactionGUI(this);
+	private final GUIHandler guiHandler = new GUIHandler(this);
 	private final Configuration configuration = new Configuration();
+	private final EventManager eventManager = new EventManager();
+	private final TickedManager tickedManager = new TickedManager(this);
+	private FactionMethods factionMethods;
 
-	public Unity(UnityMessenger messenger, BootstrapHandler handler) {
+	public Unity(UnityMessenger messenger, BootstrapHandler bootstrapHandler) {
 		this.messenger = messenger;
-		this.handler = handler;
+		this.bootstrapHandler = bootstrapHandler;
+		factionMethods = new FactionMethods(this);
 	}
 
 	@Override
 	public void onEnable() {
-		handler.init();
+		bootstrapHandler.init();
 		shine = new Shine(this);
 		PaperMessenger.init(this);
 		InventoryGUI.init(this);
@@ -51,6 +60,8 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 		GlobalPlaceholderValue.InsertionHook.insert(messenger.getPlaceholderManager(), configuration, "configuration");
 
 		listener(playerManager);
+
+		tickedManager.init();
 	}
 
 	@Override

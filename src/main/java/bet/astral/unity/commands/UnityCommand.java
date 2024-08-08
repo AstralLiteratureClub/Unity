@@ -11,6 +11,8 @@ import org.incendo.cloud.paper.PaperCommandManager;
 import org.incendo.cloud.permission.Permission;
 import org.incendo.cloud.permission.PredicatePermission;
 
+import java.util.UUID;
+
 public class UnityCommand extends CPPBootstrapCommand<CommandSender> implements MessageSender.Packed {
 	private static Unity unity;
 	protected final Messenger messenger;
@@ -26,7 +28,7 @@ public class UnityCommand extends CPPBootstrapCommand<CommandSender> implements 
 				b.permission("unity.root")
 						.handler(context->{
 							if (context.sender() instanceof Player player) {
-								unity().getFactionGUI().openMainMenu(player);
+								unity().getGuiHandler().openMainMenu(player);
 							}
 						}), "f", "faction");
 		factionRoot.register();
@@ -61,11 +63,8 @@ public class UnityCommand extends CPPBootstrapCommand<CommandSender> implements 
 			if (!(c instanceof Player player)){
 				return false;
 			}
-			try {
-				return unity().getPlayerManager().fromBukkit(player).getFactionId() != null;
-			} catch (NullPointerException e){
-				return true;
-			}
+			UUID uniqueId = unity().getPlayerManager().fromBukkit(player).getFactionId();
+			return uniqueId != null;
 		}));
 	}
 }

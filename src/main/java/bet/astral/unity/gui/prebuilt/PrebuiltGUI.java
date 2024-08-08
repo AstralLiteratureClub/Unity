@@ -9,17 +9,17 @@ import java.util.Arrays;
 
 public interface PrebuiltGUI<O> {
 	default void openData(Player player, O obj, Placeholder... placeholders){
-		generateGUI(player, obj, new PlaceholderList(Arrays.stream(placeholders).toList()));
+		generateGUI(player, obj, new PlaceholderList(Arrays.stream(placeholders).toList())).build().open(player);
 	}
 	default void openData(Player player, O obj, PlaceholderList placeholders) {
-		generateGUI(player, obj, placeholders).build().generateInventory(player);
+		generateGUI(player, obj, placeholders).build().open(player);
 	}
 
 	default void open(Player player, Placeholder... placeholders){
-		generateGUI(player, null, new PlaceholderList(Arrays.stream(placeholders).toList()));
+		generateGUI(player, null, new PlaceholderList(Arrays.stream(placeholders).toList())).build().open(player);
 	}
 	default void open(Player player, PlaceholderList placeholders) {
-		generateGUI(player, null, placeholders).build().generateInventory(player);
+		generateGUI(player, null, placeholders).build().open(player);
 	}
 
 

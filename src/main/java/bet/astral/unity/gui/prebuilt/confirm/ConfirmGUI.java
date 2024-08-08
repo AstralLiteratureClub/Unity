@@ -1,11 +1,13 @@
 package bet.astral.unity.gui.prebuilt.confirm;
 
-import bet.astral.guiman.ClickableBuilder;
 import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.messenger.v2.placeholder.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
-import bet.astral.unity.gui.GUIHandler;
+import bet.astral.unity.gui.BaseGUI;
+import bet.astral.unity.gui.GUIBackgrounds;
 import bet.astral.unity.gui.prebuilt.PrebuiltGUI;
+import bet.astral.unity.messenger.Translations;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -15,7 +17,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.function.Consumer;
 
 @Getter
-public class ConfirmGUI extends GUIHandler implements PrebuiltGUI<Object> {
+public class ConfirmGUI extends BaseGUI implements PrebuiltGUI<Object> {
 	@NotNull
 	protected final Translation menuName;
 	@NotNull
@@ -41,7 +43,7 @@ public class ConfirmGUI extends GUIHandler implements PrebuiltGUI<Object> {
 	@Nullable
 	protected final Consumer<Player> closeConsumer;
 
-	public ConfirmGUI(@NotNull GUIHandler guiHandler,
+	public ConfirmGUI(@NotNull BaseGUI base,
 	                  @NotNull Translation menuName,
 	                  @NotNull Translation confirmItemName, @NotNull Translation confirmItemLore,
 	                  @NotNull Translation cancelItemName, @NotNull Translation cancelItemLore,
@@ -51,7 +53,7 @@ public class ConfirmGUI extends GUIHandler implements PrebuiltGUI<Object> {
 	                  @NotNull Consumer<Player> returnConsumer,
 	                  @Nullable Consumer<Player> openConsumer,
 	                  @Nullable Consumer<Player> closeConsumer) {
-		super(guiHandler);
+		super(base);
 		this.menuName = menuName;
 		this.confirmItemName = confirmItemName;
 		this.confirmItemLore = confirmItemLore;
@@ -67,45 +69,43 @@ public class ConfirmGUI extends GUIHandler implements PrebuiltGUI<Object> {
 	}
 
 	@Override
-	public void open(Player player, PlaceholderList placeholders){
-		generateGUI(player, null, placeholders).build().generateInventory(player);
+	public void open(Player player, PlaceholderList placeholders) {
+		generateGUI(player, null, placeholders).build().open(player);
 	}
 
 	@Override
-	public InventoryGUIBuilder generateGUI(Player player,  Object obj, PlaceholderList placeholders){
-		ClickableBuilder confirm = new ClickableBuilder(Material.GREEN_STAINED_GLASS_PANE, meta->{
+	public InventoryGUIBuilder generateGUI(Player player, Object obj, PlaceholderList placeholders) {
+		ClickableBuilder confirm = new ClickableBuilder(Material.GREEN_STAINED_GLASS_PANE, meta -> {
 			meta.setCustomModelData(444444440);
 			meta.displayName(component(player, confirmItemName, placeholders));
 			meta.lore(lore(player, confirmItemLore, placeholders));
-		}).setGeneralAction((clickable, itemStack, player1) -> confirmConsumer.accept(player1));
+		}).actionGeneral((clickable, itemStack, player1) -> confirmConsumer.accept(player1));
 
-		ClickableBuilder cancel = new ClickableBuilder(Material.RED_STAINED_GLASS_PANE, meta->{
+		ClickableBuilder cancel = new ClickableBuilder(Material.RED_STAINED_GLASS_PANE, meta -> {
 			meta.setCustomModelData(444444441);
 			meta.displayName(component(player, cancelItemName, placeholders));
 			meta.lore(lore(player, cancelItemLore, placeholders));
-		}).setGeneralAction((clickable, itemStack, player1) -> cancelConsumer.accept(player1));
+		}).actionGeneral((clickable, itemStack, player1) -> cancelConsumer.accept(player1));
 
-		InventoryGUIBuilder builder = new InventoryGUIBuilder(2)
-				.name(component(player, menuName, placeholders))
-				.setBackground(BACKGROUND_DARK)
-				.setCloseConsumer(closeConsumer)
-				.setOpenConsumer(openConsumer)
-				.setSlotClickable(0, confirm)
-				.setSlotClickable(1, confirm)
- 				.setSlotClickable(5, cancel)
-				.setSlotClickable(6, cancel)
-				.setSlotClickable(7, cancel)
-				.setSlotClickable(8, cancel)
-				.setSlotClickable(13, new ClickableBuilder(Material.BARRIER, meta->{
+		return new InventoryGUIBuilder(2)
+				.messenger(getMessenger())
+				.title(menuName)
+				.placeholderGenerator(p->placeholders(player, null))
+				.background(GUIBackgrounds.CONFIRM)
+				.closeConsumer(closeConsumer)
+				.openConsumer(openConsumer)
+				.clickable(0, confirm)
+				.clickable(1, confirm)
+				.clickable(2, confirm)
+				.clickable(3, confirm)
+				.clickable(5, cancel)
+				.clickable(6, cancel)
+				.clickable(7, cancel)
+				.clickable(8, cancel)
+				.clickable(13, new ClickableBuilder(Material.BARRIER, meta -> {
 					meta.displayName(component(player, returnItemName, placeholders));
 					meta.lore(lore(player, returnItemLore, placeholders));
-				}).setGeneralAction((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
-				;
-		if (!(this instanceof SignConfirmGUI)){
-			builder
-					.setSlotClickable(2, confirm)
-					.setSlotClickable(3, confirm);
-		}
-		return builder;
+				})
+						.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)));
 	}
 }
