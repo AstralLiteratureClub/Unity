@@ -1,13 +1,13 @@
-package bet.astral.unity.gui.faction;
+package bet.astral.unity.gui.faction.own;
 
+import bet.astral.guiman.clickable.Clickable;
 import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.guiman.InventoryGUIBuilder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.guiman.gui.InventoryGUI;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.signman.SignGUIBuilder;
 import bet.astral.signman.SignMaterial;
-import bet.astral.tuples.Triplet;
-import bet.astral.unity.commands.faction.manage.BanSubCommand;
-import bet.astral.unity.commands.faction.manage.KickSubCommand;
+import bet.astral.more4j.tuples.Triplet;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.entity.FactionMember;
 import bet.astral.unity.gui.GUIBackgrounds;
@@ -16,12 +16,13 @@ import bet.astral.unity.gui.prebuilt.confirm.ConfirmGUI;
 import bet.astral.unity.gui.prebuilt.confirm.SignConfirmGUI;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.JoinConfiguration;
 import org.bukkit.Bukkit;
 import org.bukkit.DyeColor;
 import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
 import java.util.function.Predicate;
@@ -42,11 +43,7 @@ public class MembersGUI extends FactionBaseGUI {
 				Translations.GUI_BUTTON_MEMBERS_NEXT_PAGE_NAME, Translations.GUI_BUTTON_MEMBERS_NEXT_PAGE_DESCRIPTION,
 				Translations.GUI_BUTTON_MEMBERS_RETURN_NAME, Translations.GUI_BUTTON_MEMBERS_RETURN_DESCRIPTION,
 				5,
-				(player, offlinePlayer) -> {
-					bet.astral.unity.entity.Player fPlayer = unity.getPlayerManager().fromBukkit(player);
-					Faction faction = unity.getFactionManager().get(fPlayer.getFactionId());
-					openMemberManage(player, offlinePlayer, faction);
-				},
+				this::openMemberManage,
 				guiHandler::openMainMenu,
 				null,
 				null
@@ -64,7 +61,8 @@ public class MembersGUI extends FactionBaseGUI {
 						handler.openMainMenu(player);
 						return;
 					}
-					KickSubCommand.handle(player, Bukkit.getOfflinePlayer(kickingId), null, true);
+					OfflinePlayer player1 = Bukkit.getOfflinePlayer(kickingId);
+					unity.getFactionMethods().kick(player, player1, null, this::openMembers);
 				},
 				new SignGUIBuilder()
 						.setMaterial(SignMaterial.BIRCH)
@@ -76,7 +74,8 @@ public class MembersGUI extends FactionBaseGUI {
 								root.openMainMenu(player);
 								return;
 							}
-							KickSubCommand.handle(player, Bukkit.getOfflinePlayer(kickingId), result.getPlainLines(), true);
+							OfflinePlayer player1 = Bukkit.getOfflinePlayer(kickingId);
+							unity.getFactionMethods().kick(player, player1, Component.join(JoinConfiguration.spaces(), result.getLines()), this::openMembers);
 						}))
 				,
 				(player) -> {
@@ -95,7 +94,7 @@ public class MembersGUI extends FactionBaseGUI {
 					if (kickingId == null) {
 						return;
 					}
-					openMembers(player, faction);
+					openMembers(player);
 				},
 				(player) -> {
 					bet.astral.unity.entity.Player fPlayer = unity.getPlayerManager().fromBukkit(player);
@@ -113,7 +112,7 @@ public class MembersGUI extends FactionBaseGUI {
 					if (kickingId == null) {
 						return;
 					}
-					openMemberManage(player, Bukkit.getOfflinePlayer(kickingId), faction);
+					openMemberManage(player, Bukkit.getOfflinePlayer(kickingId));
 				}, null, player -> modifyingMembers.remove(player.getUniqueId()));
 
 		this.confirmBanGUI = new SignConfirmGUI(this,
@@ -128,7 +127,8 @@ public class MembersGUI extends FactionBaseGUI {
 						handler.openMainMenu(player);
 						return;
 					}
-					BanSubCommand.handle(player, Bukkit.getOfflinePlayer(kickingId), null, true);
+					OfflinePlayer player1 = Bukkit.getOfflinePlayer(kickingId);
+					unity.getFactionMethods().ban(player, player1, null, this::openMembers);
 				},
 				new SignGUIBuilder()
 						.setMaterial(SignMaterial.BIRCH)
@@ -140,7 +140,8 @@ public class MembersGUI extends FactionBaseGUI {
 								handler.openMainMenu(player);
 								return;
 							}
-							BanSubCommand.handle(player, Bukkit.getOfflinePlayer(banningId), result.getPlainLines(), true);
+							OfflinePlayer player1 = Bukkit.getOfflinePlayer(banningId);
+							unity.getFactionMethods().ban(player, player1, Component.join(JoinConfiguration.spaces(), result.getLines()), this::openMembers);
 						}))
 				,
 				(player) -> {
@@ -159,7 +160,7 @@ public class MembersGUI extends FactionBaseGUI {
 					if (banningId == null) {
 						return;
 					}
-					openMembers(player, faction);
+					openMembers(player);
 				},
 				(player) -> {
 					bet.astral.unity.entity.Player fPlayer = unity.getPlayerManager().fromBukkit(player);
@@ -177,28 +178,37 @@ public class MembersGUI extends FactionBaseGUI {
 					if (banningId == null) {
 						return;
 					}
-					openMemberManage(player, Bukkit.getOfflinePlayer(banningId), faction);
+					openMemberManage(player, Bukkit.getOfflinePlayer(banningId));
 				},
 				null, player -> modifyingMembers.remove(player.getUniqueId()));
 	}
 
 
-	public void openMembers(Player player, Faction faction) {
-		openMembers(player, faction, 0);
+	public void openMembers(Player player) {
+		openMembers(player, 0);
 	}
 
-	public void openMembers(Player player, @NotNull Faction faction, int page) {
+	public void openMembers(Player player, int page) {
+		Faction faction = fetchFaction(player).orElse(null);
+		if (faction == null){
+			handler.openMainMenu(player);
+			return;
+		}
 		Triplet<List<? extends OfflinePlayer>, Integer, Faction> triplet = Triplet.immutable(faction.getMembersAsOfflinePlayers(), page, faction);
 		membersGUI.openData(player, triplet);
 	}
 
-	public void openMemberManage(Player player, OfflinePlayer offlinePlayer, Faction faction) {
+	public void openMemberManage(Player player, OfflinePlayer offlinePlayer) {
+		Faction faction = fetchFaction(player).orElse(null);
+		if (faction == null){
+			handler.openMainMenu(player);
+			return;
+		}
+
 		PlaceholderList placeholders = new PlaceholderList(placeholders(offlinePlayer, faction));
 
-		ClickableBuilder kick = new ClickableBuilder(Material.IRON_AXE, meta -> {
-			meta.displayName(component(player, Translations.GUI_BUTTON_MEMBER_MANAGE_KICK_NAME, placeholders));
-			meta.lore(lore(player, Translations.GUI_BUTTON_MEMBER_MANAGE_KICK_DESCRIPTION, placeholders));
-		})
+		ClickableBuilder kick = Clickable.builder(Material.IRON_AXE)
+				.placeholderGenerator(p -> placeholders).title(Translations.GUI_BUTTON_MEMBER_MANAGE_KICK_NAME).description(Translations.COMMAND_FACTION_KICK_DESCRIPTION)
 				.permission((Predicate<Player>) player1 -> {
 					FactionMember member = faction.getMember(player1.getUniqueId());
 					return (member.hasPermission(Permission.KICK_MEMBERS) || member.hasPermission(Permission.BAN_PLAYERS));
@@ -208,10 +218,10 @@ public class MembersGUI extends FactionBaseGUI {
 					modifyingMembers.put(player1.getUniqueId(), offlinePlayer.getUniqueId());
 					confirmKickGUI.open(player, placeholders);
 				});
-		ClickableBuilder ban = new ClickableBuilder(Material.DIAMOND_AXE, meta -> {
-			meta.displayName(component(player, Translations.GUI_BUTTON_MEMBER_MANAGE_BAN_NAME, placeholders));
-			meta.lore(lore(player, Translations.GUI_BUTTON_MEMBER_MANAGE_BAN_DESCRIPTION, placeholders));
-		})
+		ClickableBuilder ban = Clickable.builder(Material.DIAMOND_AXE).
+				placeholderGenerator(p -> placeholders(p, faction))
+				.title(Translations.GUI_BUTTON_MEMBER_MANAGE_BAN_NAME)
+				.description(Translations.GUI_BUTTON_MEMBER_MANAGE_BAN_DESCRIPTION)
 				.permission((Predicate<Player>) player1 -> {
 					FactionMember member = faction.getMember(player1.getUniqueId());
 					return (member.hasPermission(Permission.KICK_MEMBERS) || member.hasPermission(Permission.BAN_PLAYERS));
@@ -222,17 +232,16 @@ public class MembersGUI extends FactionBaseGUI {
 					confirmBanGUI.open(player, placeholders);
 				});
 
-		new InventoryGUIBuilder(2)
+		InventoryGUI.builder(2)
 				.messenger(getMessenger())
-				.title(component(player, Translations.GUI_FACTION_MEMBER_MANAGE, placeholders))
+				.placeholderGenerator(p -> placeholders)
+				.title(Translations.GUI_FACTION_MEMBER_MANAGE)
 				.background(GUIBackgrounds.MANAGE)
 				.addClickable(0, kick)
 				.addClickable(1, ban)
-				.addClickable(13, new ClickableBuilder(Material.BARRIER, meta -> {
-					meta.displayName(component(player, Translations.GUI_BUTTON_MEMBER_MANAGE_RETURN_NAME));
-					meta.lore(lore(player, Translations.GUI_BUTTON_MEMBER_MANAGE_RETURN_DESCRIPTION));
-				})
-						.actionGeneral((clickable, itemStack, player1) -> openMembers(player1, faction)))
+				.addClickable(13, Clickable.builder(Material.BARRIER)
+						.title(Translations.GUI_BUTTON_MEMBER_MANAGE_RETURN_NAME).description(Translations.GUI_BUTTON_BAN_RETURN_LORE)
+						.actionGeneral((clickable, itemStack, player1) -> openMembers(player1)))
 				.build()
 				.open(player);
 	}

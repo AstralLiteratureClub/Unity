@@ -1,13 +1,15 @@
 package bet.astral.unity.gui.prebuilt.confirm;
 
-import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.Clickable;
 import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.guiman.gui.InventoryGUI;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
+import bet.astral.messenger.v2.translation.TranslationKey;
 import bet.astral.unity.gui.BaseGUI;
 import bet.astral.unity.gui.GUIBackgrounds;
 import bet.astral.unity.gui.prebuilt.PrebuiltGUI;
-import bet.astral.unity.messenger.Translations;
 import lombok.Getter;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -19,19 +21,19 @@ import java.util.function.Consumer;
 @Getter
 public class ConfirmGUI extends BaseGUI implements PrebuiltGUI<Object> {
 	@NotNull
-	protected final Translation menuName;
+	protected final TranslationKey menuName;
 	@NotNull
-	protected final Translation confirmItemName;
+	protected final TranslationKey confirmItemName;
 	@NotNull
-	protected final Translation confirmItemLore;
+	protected final TranslationKey confirmItemLore;
 	@NotNull
-	protected final Translation cancelItemName;
+	protected final TranslationKey cancelItemName;
 	@NotNull
-	protected final Translation cancelItemLore;
+	protected final TranslationKey cancelItemLore;
 	@NotNull
-	protected final Translation returnItemName;
+	protected final TranslationKey returnItemName;
 	@NotNull
-	protected final Translation returnItemLore;
+	protected final TranslationKey returnItemLore;
 	@NotNull
 	protected final Consumer<Player> confirmConsumer;
 	@NotNull
@@ -75,37 +77,37 @@ public class ConfirmGUI extends BaseGUI implements PrebuiltGUI<Object> {
 
 	@Override
 	public InventoryGUIBuilder generateGUI(Player player, Object obj, PlaceholderList placeholders) {
-		ClickableBuilder confirm = new ClickableBuilder(Material.GREEN_STAINED_GLASS_PANE, meta -> {
+		ClickableBuilder confirm = Clickable.builder(Material.GREEN_STAINED_GLASS_PANE, meta -> {
 			meta.setCustomModelData(444444440);
-			meta.displayName(component(player, confirmItemName, placeholders));
-			meta.lore(lore(player, confirmItemLore, placeholders));
-		}).actionGeneral((clickable, itemStack, player1) -> confirmConsumer.accept(player1));
+		}).placeholderGenerator(p->placeholders).title(confirmItemName).description(confirmItemLore)
+				.actionGeneral((clickable, itemStack, player1) -> confirmConsumer.accept(player1))
+				.priority(10);
 
-		ClickableBuilder cancel = new ClickableBuilder(Material.RED_STAINED_GLASS_PANE, meta -> {
-			meta.setCustomModelData(444444441);
-			meta.displayName(component(player, cancelItemName, placeholders));
-			meta.lore(lore(player, cancelItemLore, placeholders));
-		}).actionGeneral((clickable, itemStack, player1) -> cancelConsumer.accept(player1));
+		ClickableBuilder cancel = Clickable.builder(Material.RED_STAINED_GLASS_PANE, meta -> {
+					meta.setCustomModelData(444444441);
+				}).placeholderGenerator(p->placeholders).title(cancelItemName).description(cancelItemLore)
+				.actionGeneral((clickable, itemStack, player1) -> cancelConsumer.accept(player1))
+				.priority(10);
 
-		return new InventoryGUIBuilder(2)
+		return InventoryGUI.builder(2)
 				.messenger(getMessenger())
 				.title(menuName)
 				.placeholderGenerator(p->placeholders(player, null))
 				.background(GUIBackgrounds.CONFIRM)
 				.closeConsumer(closeConsumer)
 				.openConsumer(openConsumer)
-				.clickable(0, confirm)
-				.clickable(1, confirm)
-				.clickable(2, confirm)
-				.clickable(3, confirm)
-				.clickable(5, cancel)
-				.clickable(6, cancel)
-				.clickable(7, cancel)
-				.clickable(8, cancel)
-				.clickable(13, new ClickableBuilder(Material.BARRIER, meta -> {
-					meta.displayName(component(player, returnItemName, placeholders));
-					meta.lore(lore(player, returnItemLore, placeholders));
-				})
+				.addClickable(0, confirm)
+				.addClickable(1, confirm)
+				.addClickable(2, confirm)
+				.addClickable(3, confirm)
+				.addClickable(5, cancel)
+				.addClickable(6, cancel)
+				.addClickable(7, cancel)
+				.addClickable(8, cancel)
+				.addClickable(13, Clickable.builder(Material.BARRIER)
+						.placeholderGenerator(p->placeholders(player, null))
+						.title(returnItemName)
+						.description(returnItemLore)
 						.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)));
 	}
 }

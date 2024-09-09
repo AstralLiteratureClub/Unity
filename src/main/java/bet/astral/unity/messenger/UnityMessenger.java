@@ -6,7 +6,7 @@ import bet.astral.messenger.v2.cloud.paper.locale.CommandSenderLocaleExtractor;
 import bet.astral.messenger.v2.paper.PaperMessenger;
 import bet.astral.messenger.v2.paper.receiver.PlayerReceiver;
 import bet.astral.messenger.v2.placeholder.Placeholder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.entity.FactionMember;
 import org.bukkit.OfflinePlayer;
@@ -15,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.Objects;
 
 public class UnityMessenger extends PaperMessenger implements CloudMessenger, CaptionMessenger<CommandSender> {
 	private static final OfflinePlayerReceiver OFFLINE_RECEIVER = new OfflinePlayerReceiver();
@@ -36,7 +38,7 @@ public class UnityMessenger extends PaperMessenger implements CloudMessenger, Ca
 
 	public static PlaceholderList placeholders(@NotNull OfflinePlayer player, @Nullable Faction faction) {
 		PlaceholderList placeholders = new PlaceholderList();
-		placeholders.add("player", player.getName());
+		placeholders.add("player", Objects.requireNonNull(player.getName()));
 		if (faction != null) {
 			placeholders.add("faction", faction.getName());
 			placeholders.add("faction_id", faction.getUniqueId().toString());

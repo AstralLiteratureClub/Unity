@@ -1,7 +1,7 @@
 package bet.astral.unity.events.faction;
 
+import bet.astral.more4j.event.Event;
 import bet.astral.unity.entity.Faction;
-import bet.astral.unity.events.Event;
 import lombok.Getter;
 
 @Getter

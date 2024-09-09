@@ -36,21 +36,20 @@ var serverVersion = "1.21"
 var cloudVersion = "2.0.0-beta.8"
 var cloudTranslationsVersion = "1.0.0-beta.2"
 
-var messengerVersion = "2.0.5"
+var messengerVersion = "2.0.7"
 var shineVersion = "1.0.0"
-var tuplesVersion = "1.0.0"
+var more4JVersion = "1.0.1"
 var cloudPlusPlusVersion = "1.2.6"
-var guiManVersion = "1.1.0"
+var guiManVersion = "1.1.4"
 
 dependencies {
     implementation 'bet.astral:messenger:'+messengerVersion
     implementation 'bet.astral:messenger-cloud:'+messengerVersion
     implementation 'bet.astral:messenger-paper:'+messengerVersion
-    implementation 'bet.astral:messenger-bukkit:'+messengerVersion
-    implementation 'bet.astral:messenger-cloud-bukkit:'+messengerVersion
     implementation 'bet.astral:messenger-cloud-paper:'+messengerVersion
     implementation 'bet.astral:shine:'+shineVersion
-    implementation 'bet.astral:tuples:'+tuplesVersion
+    implementation 'bet.astral:more4j:'+more4JVersion
+    implementation 'bet.astral:more4j-minecraft:'+more4JVersion
     implementation 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
     implementation 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
     implementation 'bet.astral:guiman:'+guiManVersion

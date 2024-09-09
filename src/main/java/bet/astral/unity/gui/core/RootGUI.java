@@ -1,4 +1,4 @@
-package bet.astral.unity.gui;
+package bet.astral.unity.gui.core;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.ApiStatus;

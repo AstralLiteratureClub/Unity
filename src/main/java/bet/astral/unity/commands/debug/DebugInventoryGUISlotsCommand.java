@@ -2,8 +2,10 @@ package bet.astral.unity.commands.debug;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.guiman.InventoryGUI;
-import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.gui.InventoryGUI;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
+import bet.astral.messenger.v2.translation.Translation;
+import bet.astral.messenger.v2.translation.TranslationKey;
 import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.Component;
@@ -74,14 +76,14 @@ public class DebugInventoryGUISlotsCommand extends DebugCommand {
 							InventoryGUIBuilder builder;
 							if (type==InventoryType.CHEST){
 								int slots = bigChest ? 6 : 3;
-								builder = new InventoryGUIBuilder(slots);
+								builder = InventoryGUI.builder(slots);
 								inventory = Bukkit.createInventory(null, slots*9);
 							} else {
-								builder = new InventoryGUIBuilder(type);
+								builder = InventoryGUI.builder(type);
 								inventory = Bukkit.createInventory(null, type);
 							}
 
-							builder.title(Component.text("GUI Slots ("+ type+")"));
+							builder.title(TranslationKey.of("GUI Slots ("+type+")"));
 							for (int i = 1; i < inventory.getSize(); i++){
 								ItemStack itemStack = ItemStack.of(Material.GRAY_STAINED_GLASS_PANE);
 								int finalI = i;

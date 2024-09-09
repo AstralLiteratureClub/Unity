@@ -1,10 +1,12 @@
 package bet.astral.unity.gui.prebuilt;
 
-import bet.astral.guiman.InventoryGUIBuilder;
-import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.guiman.clickable.Clickable;
+import bet.astral.guiman.gui.InventoryGUI;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
-import bet.astral.tuples.Triplet;
+import bet.astral.messenger.v2.translation.TranslationKey;
+import bet.astral.more4j.tuples.Triplet;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.gui.BaseGUI;
 import bet.astral.unity.gui.GUIBackgrounds;
@@ -17,28 +19,29 @@ import org.jetbrains.annotations.Nullable;
 import org.jetbrains.annotations.Range;
 
 import java.util.List;
+import java.util.Objects;
 import java.util.function.BiConsumer;
 import java.util.function.Consumer;
 
 public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? extends OfflinePlayer>, Integer, Faction>> {
 	@NotNull
-	private final Translation title;
+	private final TranslationKey title;
 	@NotNull
-	private final Translation headName;
+	private final TranslationKey headName;
 	@NotNull
-	private final Translation headLore;
+	private final TranslationKey headLore;
 	@NotNull
-	private final Translation previousPageName;
+	private final TranslationKey previousPageName;
 	@NotNull
-	private final Translation previousPageLore;
+	private final TranslationKey previousPageLore;
 	@NotNull
-	private final Translation nextPageName;
+	private final TranslationKey nextPageName;
 	@NotNull
-	private final Translation nextPageLore;
+	private final TranslationKey nextPageLore;
 	@NotNull
-	private final Translation returnName;
+	private final TranslationKey returnName;
 	@NotNull
-	private final Translation returnLore;
+	private final TranslationKey returnLore;
 	@Range(from=2, to=6)
 	private final int maxRows;
 	@NotNull
@@ -98,9 +101,10 @@ public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? ext
 		placeholders.add("next_page", currentPage+2);
 		placeholders.add("pages", pages);
 
-		InventoryGUIBuilder builder = new InventoryGUIBuilder(5)
+		InventoryGUIBuilder builder = InventoryGUI.builder(5)
 				.messenger(getMessenger())
-				.title(component(player, title, placeholders))
+				.placeholderGenerator(p->placeholders)
+				.title(title)
 				.background(GUIBackgrounds.PLAYERS);
 		int form = currentPage == 0 ? 0 : (currentPage-1)*maxSlots;
 		int to = currentPage == 0 ? maxSlots : currentPage*maxSlots;
@@ -118,13 +122,18 @@ public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? ext
 		List<? extends OfflinePlayer> subList = players.subList(form, to);
 
 		for (OfflinePlayer offlinePlayer : subList) {
-			builder.addClickable(i, new ClickableBuilder(Material.PLAYER_HEAD, meta -> {
+			builder.addClickable(i, Clickable.builder(Material.PLAYER_HEAD, meta -> {
 						meta.setPlayerProfile(offlinePlayer.getPlayerProfile());
-						PlaceholderList playerPlaceholders = new PlaceholderList(placeholders(offlinePlayer, faction));
-						playerPlaceholders.addAll(placeholders);
-						meta.displayName(component(player, headName, playerPlaceholders));
-						meta.lore(lore(player, headLore, playerPlaceholders));
 					}, SkullMeta.class)
+							.placeholderGenerator(p->{
+								PlaceholderList playerPlaceholders = new PlaceholderList();
+								playerPlaceholders.addAll(placeholders);
+								playerPlaceholders.removeIf(pl->pl.getKey().equalsIgnoreCase("player"));
+								playerPlaceholders.add("player", Objects.requireNonNull(offlinePlayer.getName()));
+								return playerPlaceholders;
+							})
+							.title(headName)
+							.description(headLore)
 					.actionGeneral((clickable, itemStack, player1) -> clickConsumer.accept(player1, offlinePlayer))
 					.priority(100)
 			);
@@ -132,28 +141,25 @@ public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? ext
 		}
 
 		builder
-				.addClickable(maxSlots-9, new ClickableBuilder(Material.ARROW, meta -> {
-							meta.displayName(component(player, previousPageName, placeholders));
-							meta.lore(lore(player, previousPageLore, placeholders));
-						})
-						.priority(10)
+				.addClickable(maxSlots-9, Clickable.builder(Material.ARROW)
+						.placeholderGenerator(p->placeholders)
+						.title(previousPageName)
+						.description(previousPageLore)
 						.permission(bet.astral.guiman.permission.Permission.of(p -> !firstPage))
-						.displayIfNoPermissions()
 						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage-1)))
 						.priority(100)
 				)
-				.clickable(maxSlots-5, new ClickableBuilder(Material.BARRIER, meta -> {
-					meta.displayName(component(player, returnName, placeholders));
-					meta.lore(lore(player, returnLore, placeholders));
-				}).actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
+				.clickable(maxSlots-5, Clickable.builder(Material.BARRIER)
+						.placeholderGenerator(p->placeholders)
+						.title(returnName)
+						.description(returnLore)
+						.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
 
-				.addClickable(maxSlots, new ClickableBuilder(Material.ARROW, meta -> {
-							meta.displayName(component(player, nextPageName, placeholders));
-							meta.lore(lore(player, nextPageLore, placeholders));
-						})
-						.priority(10)
+				.addClickable(maxSlots-1, Clickable.builder(Material.ARROW)
+						.placeholderGenerator(p->placeholders)
+						.title(nextPageName)
+						.description(nextPageLore)
 						.permission(bet.astral.guiman.permission.Permission.of(p -> !lastPage))
-						.displayIfNoPermissions()
 						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage+1)))
 						.priority(100)
 				);

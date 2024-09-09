@@ -1,7 +1,7 @@
 package bet.astral.unity.gui;
 
 import bet.astral.unity.Unity;
-import bet.astral.unity.gui.faction.FactionGUI;
+import bet.astral.unity.gui.faction.own.FactionGUI;
 import bet.astral.unity.gui.no_faction.NoFactionGUI;
 import lombok.Getter;
 import org.bukkit.Bukkit;

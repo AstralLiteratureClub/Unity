@@ -1,13 +1,14 @@
 package bet.astral.unity.gui.no_faction;
 
-import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.Clickable;
+import bet.astral.guiman.gui.InventoryGUI;
 import bet.astral.messenger.v2.placeholder.Placeholder;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.signman.SignGUIBuilder;
 import bet.astral.unity.commands.no_faction.CreateSubCommand;
 import bet.astral.unity.gui.BaseGUI;
 import bet.astral.unity.gui.GUIHandler;
-import bet.astral.unity.gui.RootGUI;
+import bet.astral.unity.gui.core.RootGUI;
 import bet.astral.unity.gui.GUIBackgrounds;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.Component;
@@ -23,27 +24,29 @@ public class NoFactionGUI extends BaseGUI implements RootGUI {
 
 	@Override
 	public void openMainMenu(Player player) {
-		new InventoryGUIBuilder(3)
+		InventoryGUI.builder(3)
 				.messenger(getMessenger())
-				.title(component(player, Translations.GUI_NO_FACTION, Placeholder.of("player", player.name())))
-				.background(GUIBackgrounds.MAIN_MENU)
-				.addClickable(13, new ClickableBuilder(Material.OAK_SIGN, meta -> {
-							meta.displayName(component(player, Translations.GUI_BUTTON_CREATE_FACTION_NAME));
-							meta.lore(lore(player, Translations.GUI_BUTTON_CREATE_FACTION_DESCRIPTION));
+				.placeholderGenerator(p -> {
+					PlaceholderList placeholders = placeholders(p, null);
+					placeholders.add(Placeholder.of("player", player.name()));
+					return placeholders;
+				})
+				.title(Translations.GUI_NO_FACTION)
+				.background(GUIBackgrounds.DARK)
+				.addClickable(13, Clickable.builder(Material.OAK_SIGN).title(Translations.GUI_BUTTON_CREATE_FACTION_NAME).description(Translations.GUI_BUTTON_CREATE_FACTION_DESCRIPTION)
+						.actionGeneral((clickable, itemStack, player1) -> {
+							new SignGUIBuilder()
+									.setLines(splitComponent(player, Translations.SIGN_GUI_TEXT_CREATE).toArray(Component[]::new))
+									.setHandler(() -> List.of(
+											(p, result) -> {
+												String name = plainText.serialize(result.getFirst());
+												name = name.replace(" ", "_");
+												CreateSubCommand.handle(player, name, true);
+											}
+									))
+									.build()
+									.open(player);
 						})
-								.actionGeneral((clickable, itemStack, player1) -> {
-									new SignGUIBuilder()
-											.setLines(lore(player, Translations.SIGN_GUI_TEXT_CREATE).toArray(Component[]::new))
-											.setHandler(()-> List.of(
-													(p, result) -> {
-														String name = plainText.serialize(result.getFirst());
-														name = name.replace(" ", "_");
-														CreateSubCommand.handle(player, name, true);
-													}
-											))
-											.build()
-											.open(player);
-								})
 				)
 				.addClickable(22, createAccountInfo(player))
 				.build()

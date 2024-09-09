@@ -1,9 +1,11 @@
 package bet.astral.unity.gui.prebuilt.confirm;
 
-import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.clickable.Clickable;
 import bet.astral.guiman.clickable.ClickableBuilder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.messenger.v2.translation.Translation;
+import bet.astral.messenger.v2.translation.TranslationKey;
 import bet.astral.signman.SignGUI;
 import bet.astral.signman.SignGUIBuilder;
 import bet.astral.unity.gui.BaseGUI;
@@ -20,8 +22,8 @@ import java.util.function.Consumer;
 public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 	private final SignGUI gui;
 	private final Material signMaterial;
-	private final Translation confirmSignItemName;
-	private final Translation confirmSignItemLore;
+	private final TranslationKey confirmSignItemName;
+	private final TranslationKey confirmSignItemLore;
 
 	public SignConfirmGUI(@NotNull BaseGUI base, @NotNull Translation menuName,
 	                      @NotNull Translation confirmItemName, @NotNull Translation confirmItemLore,
@@ -80,18 +82,16 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 
 	@Override
 	public InventoryGUIBuilder generateGUI(Player player, Object obj, PlaceholderList placeholders) {
-		ClickableBuilder confirm = new ClickableBuilder(gui.getMaterial().getMaterial(gui.getSignSize()), meta -> {
-			meta.setCustomModelData(444444440);
-			meta.displayName(component(player, confirmSignItemName, placeholders));
-			meta.lore(lore(player, confirmSignItemLore, placeholders));
-		})
+		ClickableBuilder confirm = Clickable.builder(gui.getMaterial().getMaterial(gui.getSignSize()))
+				.placeholderGenerator(p->placeholders)
+				.title(confirmSignItemName)
+				.description(confirmSignItemLore)
 				.actionGeneral((clickable, itemStack, player1) -> gui.open(player1))
 				.priority(100);
 
-
 		return super.generateGUI(player, obj, placeholders)
-				.addClickable(2, confirm)
-				.addClickable(3, confirm)
+				.clickable(2, confirm)
+				.clickable(3, confirm)
 				;
 	}
 }

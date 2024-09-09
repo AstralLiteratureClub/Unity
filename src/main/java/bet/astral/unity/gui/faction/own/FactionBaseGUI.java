@@ -1,4 +1,4 @@
-package bet.astral.unity.gui.faction;
+package bet.astral.unity.gui.faction.own;
 
 import bet.astral.unity.gui.BaseGUI;
 import org.jetbrains.annotations.ApiStatus;

@@ -7,6 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 public class FactionManager implements Manager {
 	private final Map<UUID, Faction> factionMap = new HashMap<>();
@@ -131,5 +132,14 @@ public class FactionManager implements Manager {
 	 */
 	public CompletableFuture<Boolean> exist(String name) {
 		return unity.getFactionInfoDatabase().exists(name);
+	}
+
+	/**
+	 * Returns all factions created in the server
+	 * @return factions
+	 */
+	@NotNull
+	public Set<Faction> factions(){
+		return new HashSet<>(factionMap.values());
 	}
 }

@@ -3,7 +3,6 @@ package bet.astral.unity.commands.faction;
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
 import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
-import bet.astral.unity.entity.Faction;
 import bet.astral.unity.messenger.Translations;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -24,9 +23,7 @@ public class MembersSubCommand extends UnityCommand {
 						.permission(requireFaction("unity.members"))
 						.senderType(Player.class)
 						.handler(context->{
-							Faction faction = unity().getFactionManager().get(
-									unity().getPlayerManager().fromBukkit(context.sender()).getFactionId());
-							unity().getGuiHandler().getFactionGUI().getMembersGUI().openMembers(context.sender(), faction);
+							unity().getGuiHandler().getFactionGUI().getMembersGUI().openMembers(context.sender());
 						})
 		);
 	}

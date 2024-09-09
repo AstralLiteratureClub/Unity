@@ -1,9 +1,10 @@
 package bet.astral.unity;
 
 import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;
-import bet.astral.guiman.InventoryGUI;
+import bet.astral.guiman.GUIMan;
 import bet.astral.messenger.v2.MessageSender;
 import bet.astral.messenger.v2.paper.PaperMessenger;
+import bet.astral.more4j.event.EventManager;
 import bet.astral.shine.Shine;
 import bet.astral.signman.SignGUI;
 import bet.astral.unity.data.Configuration;
@@ -12,7 +13,6 @@ import bet.astral.unity.data.FactionInfoDatabase;
 import bet.astral.unity.data.PlayerDatabase;
 import bet.astral.unity.data.gson.GsonFactionDatabase;
 import bet.astral.unity.data.gson.GsonPlayerDatabase;
-import bet.astral.unity.events.EventManager;
 import bet.astral.unity.gui.GUIHandler;
 import bet.astral.unity.managers.FactionManager;
 import bet.astral.unity.managers.PlayerManager;
@@ -41,7 +41,7 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 	private final Configuration configuration = new Configuration();
 	private final EventManager eventManager = new EventManager();
 	private final TickedManager tickedManager = new TickedManager(this);
-	private FactionMethods factionMethods;
+	private final FactionMethods factionMethods;
 
 	public Unity(UnityMessenger messenger, BootstrapHandler bootstrapHandler) {
 		this.messenger = messenger;
@@ -54,7 +54,7 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 		bootstrapHandler.init();
 		shine = new Shine(this);
 		PaperMessenger.init(this);
-		InventoryGUI.init(this);
+		GUIMan.init(this);
 		SignGUI.init(this, true);
 
 		GlobalPlaceholderValue.InsertionHook.insert(messenger.getPlaceholderManager(), configuration, "configuration");

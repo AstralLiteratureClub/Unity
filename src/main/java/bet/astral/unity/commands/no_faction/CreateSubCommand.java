@@ -1,7 +1,7 @@
 package bet.astral.unity.commands.no_faction;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.unity.commands.UnityCommand;
 import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
 import bet.astral.unity.data.FactionDatabase;

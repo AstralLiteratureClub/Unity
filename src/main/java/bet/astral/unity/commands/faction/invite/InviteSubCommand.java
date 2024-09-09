@@ -18,17 +18,15 @@ public class InviteSubCommand extends UnityCommand {
 
 	@Override
 	public void init() {
-		command(factionRoot, "invite", Translations.COMMAND_FACTION_INVITE_DESCRIPTION, b->
-				b
-						.permission(requireFaction("unity.invite").and(Permission.CANCEL_INVITE))
+		command(factionRoot, "invite", Translations.COMMAND_FACTION_INVITE_DESCRIPTION, b -> b
+						.permission(requireFaction("unity.invite").and(Permission.INVITE))
 						.optional("who", InvitableParser.invitableParser())
 						.senderType(Player.class)
-						.handler(context->{
+						.handler(context -> {
 							Player player = context.sender();
 							Player select = context.getOrDefault("who", null);
 							unity().getFactionMethods()
-											.invite(player, select, false);
-						})
-				, "add").register();
+									.invite(player, select, null);
+						})).register();
 	}
 }

@@ -1,5 +1,7 @@
 package bet.astral.unity.events;
 
+import bet.astral.more4j.event.Event;
+import bet.astral.more4j.event.EventManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.CompletableFuture;

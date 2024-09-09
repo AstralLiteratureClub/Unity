@@ -1,8 +1,8 @@
 package bet.astral.unity.gui.prebuilt;
 
-import bet.astral.guiman.InventoryGUIBuilder;
+import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
 import bet.astral.messenger.v2.placeholder.Placeholder;
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import org.bukkit.entity.Player;
 
 import java.util.Arrays;

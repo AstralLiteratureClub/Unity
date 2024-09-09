@@ -1,20 +1,24 @@
 package bet.astral.unity.entity;
 
 import bet.astral.messenger.v2.DefaultScheduler;
+import bet.astral.messenger.v2.Messenger;
 import bet.astral.messenger.v2.permission.Permission;
+import bet.astral.messenger.v2.receiver.ForwardingForwarder;
 import bet.astral.messenger.v2.receiver.Receiver;
 import bet.astral.messenger.v2.task.IScheduler;
+import bet.astral.more4j.event.EventManager;
 import bet.astral.unity.Unity;
 import bet.astral.unity.entity.record.FactionBan;
 import bet.astral.unity.entity.record.FactionInvite;
 import bet.astral.unity.events.EventCaller;
-import bet.astral.unity.events.EventManager;
 import bet.astral.unity.events.faction.FactionInviteExpireEvent;
+import bet.astral.unity.gui.prebuilt.banner.data.BannerBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import net.kyori.adventure.audience.Audience;
-import net.kyori.adventure.audience.ForwardingAudience;
+import net.kyori.adventure.text.Component;
 import org.bukkit.Bukkit;
+import org.bukkit.DyeColor;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Blocking;
@@ -27,16 +31,18 @@ import java.util.stream.Collectors;
 
 @Getter
 @Setter
-public class Faction implements Entity, ForwardingAudience, Receiver, Ticked, EventCaller {
+public class Faction implements Entity, ForwardingForwarder, Ticked, EventCaller {
 	private static Unity unity;
 	private static final Random RANDOM = new Random(System.currentTimeMillis());
 	private final UUID uniqueId;
 	private final Map<UUID, FactionMember> members = new HashMap<>();
 	private final Set<FactionBan> banned = new HashSet<>();
 	private final Map<UUID, FactionInvite> invites = new HashMap<>();
+	private final BannerBuilder bannerBuilder = new BannerBuilder().setBase(DyeColor.WHITE);
 	private Locale locale = Locale.US;
 	private String name;
 	private final long firstCreated;
+	private boolean isPublic = false;
 
 	public Faction(UUID uniqueId) {
 		this(uniqueId, System.currentTimeMillis());
@@ -97,7 +103,7 @@ public class Faction implements Entity, ForwardingAudience, Receiver, Ticked, Ev
 		return banned.stream().filter(ban->ban.getUniqueId().equals(kickingId)).findFirst().orElse(null);
 	}
 
-	public void ban(@NotNull UUID uniqueId, String reason){
+	public void ban(@NotNull UUID uniqueId, Component reason){
 		fetchUnity();
 		if (getMember(uniqueId) != null){
 			members.remove(uniqueId);
@@ -119,18 +125,14 @@ public class Faction implements Entity, ForwardingAudience, Receiver, Ticked, Ev
 		invites.put(uniqueId, new FactionInvite(uniqueId, this.getUniqueId(), System.currentTimeMillis()*(30*1000)));
 	}
 
-	public boolean isInvited(@NotNull UUID uniqueId){
-		return invites.get(uniqueId) != null;
+	public boolean isInvited(@NotNull UUID invited){
+		boolean isInvited = invites.get(invited) != null;
+		return invites.get(invited) != null;
 	}
 
-	public void cancelInvite(@NotNull UUID uniqueId) {
-
+	public void cancelInvite(@NotNull UUID invited) {
+		invites.remove(invited);
 	}
-
-
-
-
-
 
 	@Override
 	public @NotNull Iterable<? extends Audience> audiences() {
@@ -170,9 +172,26 @@ public class Faction implements Entity, ForwardingAudience, Receiver, Ticked, Ev
 
 	@Override
 	public @NotNull EventManager getEventManager() {
+		fetchUnity();
 		return unity.getEventManager();
 	}
 
+	@Override
+	public @NotNull Collection<? extends Receiver> getReceivers() {
+		return getMembersAsPlayers().stream().map(getMessenger()::convertReceiver).toList();
+	}
+
+	@Override
+	public @NotNull Iterator<Receiver> iterator() {
+		List<Receiver> receivers = getMembersAsPlayers().stream().map(getMessenger()::convertReceiver).toList();
+		return receivers.iterator();
+	}
+
+	@Override
+	public @NotNull Messenger getMessenger() {
+		fetchUnity();
+		return unity.getMessenger();
+	}
 }
 
 

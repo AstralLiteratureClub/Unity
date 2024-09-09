@@ -1,9 +1,10 @@
 package bet.astral.unity.events.listeners;
 
-import bet.astral.messenger.v2.placeholder.PlaceholderList;
+import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
+import bet.astral.more4j.event.EventListener;
+import bet.astral.more4j.event.EventPriority;
 import bet.astral.unity.Unity;
 import bet.astral.unity.entity.Faction;
-import bet.astral.unity.events.EventListener;
 import bet.astral.unity.events.faction.FactionInviteExpireEvent;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.messenger.UnityMessenger;
@@ -34,5 +35,10 @@ public class FactionInviteExpireListener implements EventListener<FactionInviteE
 	@Override
 	public @NotNull Class<FactionInviteExpireEvent> getEventType() {
 		return FactionInviteExpireEvent.class;
+	}
+
+	@Override
+	public @NotNull EventPriority getPriority() {
+		return EventPriority.FIRST;
 	}
 }
