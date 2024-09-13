@@ -1,7 +1,6 @@
 package bet.astral.unity.module;
 
 import bet.astral.unity.Unity;
-import bet.astral.unity.alliance.Alliance;
 import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
@@ -35,6 +34,7 @@ public class ModuleManager {
 		for (SubModuleBootstrap<?> bootstrap : bootstraps.values()){
 			handle(bootstrap, unity);
 		}
+		BuiltInModules.fetch(this);
 	}
 	@ApiStatus.Internal
 	public void bootstrap(){
