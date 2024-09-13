@@ -65,7 +65,9 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 
 		listener(playerManager);
 
-		moduleManager.enable();
+		if (UnityBootstrap.MODULES) {
+			moduleManager.enable();
+		}
 
 		tickedManager.init();
 	}

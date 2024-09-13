@@ -33,6 +33,7 @@ import java.util.Locale;
  */
 @Getter
 public class UnityBootstrap implements PluginBootstrap {
+	public static final boolean MODULES = false;
 	private final ModuleManager moduleManager = new ModuleManager();
 	private UnityCommandBootstrapRegister commandRegistrer;
 	private final BootstrapHandler afterBootstrap = new BootstrapHandler();
@@ -81,14 +82,17 @@ public class UnityBootstrap implements PluginBootstrap {
 		new UnityCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		new DebugCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		commandRegistrer.registerCommands("bet.astral.unity.commands");
-
-		moduleManager.bootstrap();
+		if (MODULES) {
+			moduleManager.bootstrap();
+		}
 	}
 
 	@Override
 	public @NotNull JavaPlugin createPlugin(@NotNull PluginProviderContext context) {
 		Unity unity = new Unity(messenger, afterBootstrap, moduleManager);
-		moduleManager.createInstances(unity);
+		if (MODULES) {
+			moduleManager.createInstances(unity);
+		}
 		return unity;
 	}
 }
