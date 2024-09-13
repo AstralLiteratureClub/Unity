@@ -2,7 +2,7 @@ package bet.astral.unity.commands.debug;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.signman.*;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -17,7 +17,7 @@ import java.util.List;
 @Cloud
 public class DebugSignCommand extends DebugCommand {
 	private final PlainTextComponentSerializer plain = PlainTextComponentSerializer.plainText();
-	public DebugSignCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public DebugSignCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 

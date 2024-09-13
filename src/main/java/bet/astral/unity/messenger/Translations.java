@@ -149,7 +149,7 @@ public class Translations {
 					 %configuration_faction_name_min_length%-%configuration_faction_name_max_length% chars""")
 	);
 
-	public static final Translation MESSAGE_CANNOT_USE_WHILE_IN_FACTION = new Translation("global.error.")
+	public static final Translation MESSAGE_CANNOT_USE_WHILE_IN_FACTION = new Translation("global.error.").add(ComponentType.CHAT, text("global.error."));
 
 	public static final Translation MESSAGE_FACTION_REQUIRE_NO_FACTION = new Translation("global.error.requires-no-faction").add(ComponentType.CHAT, text("<red>You cannot use this while in a faction!"));
 	public static final Translation MESSAGE_FACTION_REQUIRE_FACTION = new Translation("global.error.requires-no-faction").add(ComponentType.CHAT, text("<red>You cannot use this while in you're not in a faction!"));

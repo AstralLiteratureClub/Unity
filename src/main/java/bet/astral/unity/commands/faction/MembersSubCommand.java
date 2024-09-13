@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -10,7 +10,7 @@ import org.incendo.cloud.paper.PaperCommandManager;
 
 @Cloud
 public class MembersSubCommand extends UnityCommand {
-	public MembersSubCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public MembersSubCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 

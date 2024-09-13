@@ -7,10 +7,6 @@ plugins {
     id("xyz.jpenilla.run-paper") version "2.3.0"
     id 'maven-publish'
 }
-
-group 'bet.astral'
-version '1.0.0'
-
 repositories {
     mavenLocal()
     mavenCentral()
@@ -58,6 +54,7 @@ dependencies {
     implementation 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
     implementation 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
     implementation 'bet.astral:guiman:'+guiManVersion
+    implementation(project(":ally"))
 
     // LOMBOK
     compileOnly 'org.projectlombok:lombok:1.18.34'

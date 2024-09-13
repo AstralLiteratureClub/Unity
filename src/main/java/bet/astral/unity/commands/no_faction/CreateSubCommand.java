@@ -3,7 +3,7 @@ package bet.astral.unity.commands.no_faction;
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.data.FactionDatabase;
 import bet.astral.unity.data.PlayerDatabase;
 import bet.astral.unity.entity.Faction;
@@ -21,7 +21,7 @@ import java.util.UUID;
 
 @Cloud
 public class CreateSubCommand extends UnityCommand {
-	public CreateSubCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public CreateSubCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 

@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction.invite;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.arguments.InvitableParser;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
@@ -12,7 +12,7 @@ import org.incendo.cloud.paper.PaperCommandManager;
 
 @Cloud
 public class CancelInviteSubCommand extends UnityCommand {
-	public CancelInviteSubCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public CancelInviteSubCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 

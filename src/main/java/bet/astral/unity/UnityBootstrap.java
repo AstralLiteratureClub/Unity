@@ -9,10 +9,11 @@ import bet.astral.messenger.v2.locale.source.LanguageSource;
 import bet.astral.messenger.v2.translation.Translation;
 import bet.astral.messenger.v2.translation.serializer.gson.TranslationGsonHelper;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.debug.DebugCommand;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.messenger.UnityMessenger;
+import bet.astral.unity.module.ModuleManager;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import io.papermc.paper.plugin.bootstrap.BootstrapContext;
@@ -32,7 +33,8 @@ import java.util.Locale;
  */
 @Getter
 public class UnityBootstrap implements PluginBootstrap {
-	private UnityCommandBootstrapRegistrer commandRegistrer;
+	private final ModuleManager moduleManager = new ModuleManager();
+	private UnityCommandBootstrapRegister commandRegistrer;
 	private final BootstrapHandler afterBootstrap = new BootstrapHandler();
 	private UnityMessenger messenger = new UnityMessenger();
 	@Override
@@ -74,15 +76,19 @@ public class UnityBootstrap implements PluginBootstrap {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
-		commandRegistrer = new UnityCommandBootstrapRegistrer(messenger, afterBootstrap, context);
+		commandRegistrer = new UnityCommandBootstrapRegister(messenger, afterBootstrap, context);
 		messenger.registerTo(commandRegistrer.getCommandManager());
 		new UnityCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		new DebugCommand(commandRegistrer, commandRegistrer.getCommandManager());
 		commandRegistrer.registerCommands("bet.astral.unity.commands");
+
+		moduleManager.bootstrap();
 	}
 
 	@Override
 	public @NotNull JavaPlugin createPlugin(@NotNull PluginProviderContext context) {
-		return new Unity(messenger, afterBootstrap);
+		Unity unity = new Unity(messenger, afterBootstrap, moduleManager);
+		moduleManager.createInstances(unity);
+		return unity;
 	}
 }

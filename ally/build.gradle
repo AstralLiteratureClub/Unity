@@ -1,0 +1,65 @@
+plugins {
+    id 'java'
+    id("io.papermc.paperweight.userdev") version "1.7.1"
+}
+
+repositories {
+    mavenLocal()
+    mavenCentral()
+    maven { url "https://repo.papermc.io/repository/maven-public/" }
+    maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
+    maven { url 'https://jitpack.io' }
+
+
+    // PAPI
+    maven {
+        url = 'https://repo.extendedclip.com/content/repositories/placeholderapi/'
+    }
+
+    // Lunar client
+    maven {
+        name = 'lunarclient'
+        url = 'https://repo.lunarclient.dev'
+    }
+}
+
+var serverVersion = "1.21"
+var cloudVersion = "2.0.0-beta.8"
+var cloudTranslationsVersion = "1.0.0-beta.2"
+var messengerVersion = "2.0.7"
+var shineVersion = "1.0.0"
+var more4JVersion = "1.0.1"
+var cloudPlusPlusVersion = "1.2.6"
+var guiManVersion = "1.1.4"
+
+dependencies {
+    compileOnly(project(":"))
+
+    compileOnly 'bet.astral:messenger:'+messengerVersion
+    compileOnly 'bet.astral:messenger-cloud:'+messengerVersion
+    compileOnly 'bet.astral:messenger-paper:'+messengerVersion
+    compileOnly 'bet.astral:messenger-cloud-paper:'+messengerVersion
+    compileOnly 'bet.astral:shine:'+shineVersion
+    compileOnly 'bet.astral:more4j:'+more4JVersion
+    compileOnly 'bet.astral:more4j-minecraft:'+more4JVersion
+    compileOnly 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
+    compileOnly 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
+    compileOnly 'bet.astral:guiman:'+guiManVersion
+    // LOMBOK
+    compileOnly 'org.projectlombok:lombok:1.18.34'
+    annotationProcessor 'org.projectlombok:lombok:1.18.34'
+    // Armor Change Event
+    compileOnly 'com.jeff-media:armor-equip-event:1.0.2'
+    // More persistent data types
+    compileOnly 'com.jeff-media:MorePersistentDataTypes:2.4.0'
+    // Reflections
+    compileOnly 'io.github.classgraph:classgraph:4.8.165'
+    // PAPI
+    compileOnly 'me.clip:placeholderapi:2.11.5'
+    compileOnly 'org.incendo:cloud-paper:'+cloudVersion
+    compileOnly 'org.incendo:cloud-brigadier:'+cloudVersion
+    compileOnly 'org.incendo:cloud-minecraft-extras:'+cloudVersion
+    compileOnly 'org.incendo:cloud-translations-bukkit:'+cloudTranslationsVersion
+    // PAPER MC
+    paperweight.paperDevBundle(serverVersion+"-R0.1-SNAPSHOT")
+}

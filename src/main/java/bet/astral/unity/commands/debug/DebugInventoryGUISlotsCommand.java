@@ -4,9 +4,8 @@ import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.guiman.gui.InventoryGUI;
 import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
-import bet.astral.messenger.v2.translation.Translation;
 import bet.astral.messenger.v2.translation.TranslationKey;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -27,7 +26,7 @@ import java.util.Map;
 @Cloud
 public class DebugInventoryGUISlotsCommand extends DebugCommand {
 	private final Map<InventoryType, InventoryGUI> guis = new HashMap<>();
-	public DebugInventoryGUISlotsCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public DebugInventoryGUISlotsCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 	public void init(){

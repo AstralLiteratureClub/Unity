@@ -14,13 +14,13 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-public class UnityCommandBootstrapRegistrer implements BootstrapCommandRegisterer<CommandSender> {
+public class UnityCommandBootstrapRegister implements BootstrapCommandRegisterer<CommandSender> {
 	private final PaperCommandManager.Bootstrapped<CommandSender> commandManager;
 	private final UnityMessenger messenger;
 	private final Logger logger = LoggerFactory.getLogger("Unity/CommandRegisterer");
 	private final BootstrapHandler handler;
 
-	public UnityCommandBootstrapRegistrer(UnityMessenger messenger, BootstrapHandler afterBootstrap, BootstrapContext context) {
+	public UnityCommandBootstrapRegister(UnityMessenger messenger, BootstrapHandler afterBootstrap, BootstrapContext context) {
 		this.commandManager = PaperCommandManager.builder(new CommandSourceStackToCommandSenderMapper()).executionCoordinator(ExecutionCoordinator.asyncCoordinator()).buildBootstrapped(context);
 		this.messenger = messenger;
 		this.handler = afterBootstrap;

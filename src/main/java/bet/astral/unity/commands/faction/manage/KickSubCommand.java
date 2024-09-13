@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction.manage;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegistrer;
+import bet.astral.unity.commands.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.arguments.MemberParser;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
@@ -16,7 +16,7 @@ import org.incendo.cloud.parser.standard.StringParser;
 
 @Cloud
 public class KickSubCommand extends UnityCommand {
-	public KickSubCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public KickSubCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
 

@@ -19,6 +19,8 @@ import bet.astral.unity.managers.PlayerManager;
 import bet.astral.unity.managers.TickedManager;
 import bet.astral.unity.messenger.GlobalPlaceholderValue;
 import bet.astral.unity.messenger.UnityMessenger;
+import bet.astral.unity.module.ModuleManager;
+import bet.astral.unity.module.SubModule;
 import bet.astral.unity.shared.FactionMethods;
 import lombok.AccessLevel;
 import lombok.Getter;
@@ -42,11 +44,13 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 	private final EventManager eventManager = new EventManager();
 	private final TickedManager tickedManager = new TickedManager(this);
 	private final FactionMethods factionMethods;
+	private final ModuleManager moduleManager;
 
-	public Unity(UnityMessenger messenger, BootstrapHandler bootstrapHandler) {
+	public Unity(UnityMessenger messenger, BootstrapHandler bootstrapHandler, ModuleManager moduleManager) {
 		this.messenger = messenger;
 		this.bootstrapHandler = bootstrapHandler;
 		factionMethods = new FactionMethods(this);
+		this.moduleManager = moduleManager;
 	}
 
 	@Override
@@ -60,6 +64,8 @@ public final class Unity extends JavaPlugin implements MessageSender.Packed {
 		GlobalPlaceholderValue.InsertionHook.insert(messenger.getPlaceholderManager(), configuration, "configuration");
 
 		listener(playerManager);
+
+		moduleManager.enable();
 
 		tickedManager.init();
 	}

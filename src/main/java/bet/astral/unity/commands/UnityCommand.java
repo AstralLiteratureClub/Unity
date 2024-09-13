@@ -17,7 +17,7 @@ public class UnityCommand extends CPPBootstrapCommand<CommandSender> implements 
 	private static Unity unity;
 	protected final Messenger messenger;
 	protected static RegistrableCommand<? extends CommandSender> factionRoot;
-	public UnityCommand(UnityCommandBootstrapRegistrer registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
+	public UnityCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 		this.messenger = registerer.getMessenger();
 		init();
