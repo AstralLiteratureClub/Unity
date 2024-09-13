@@ -31,6 +31,11 @@ repositories {
     }
 }
 
+allprojects {
+    version "1.0.0"
+    group "bet.astral"
+}
+
 var serverVersion = "1.21"
 
 var cloudVersion = "2.0.0-beta.8"
