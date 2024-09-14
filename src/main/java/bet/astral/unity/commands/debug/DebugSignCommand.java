@@ -2,7 +2,7 @@ package bet.astral.unity.commands.debug;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.signman.*;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.event.ClickEvent;
 import net.kyori.adventure.text.serializer.plain.PlainTextComponentSerializer;
@@ -21,7 +21,7 @@ public class DebugSignCommand extends DebugCommand {
 		super(registerer, commandManager);
 	}
 
-	public void init() {
+	public void registerCommands() {
 		command(debugRoot, "sign", Translations.COMMAND_FACTION_DEBUG_SIGN_DESCRIPTION, b -> b
 				.permission("unity.debug.sign")
 				.senderType(Player.class)

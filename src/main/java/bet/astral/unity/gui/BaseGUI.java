@@ -2,6 +2,7 @@ package bet.astral.unity.gui;
 
 import bet.astral.guiman.clickable.Clickable;
 import bet.astral.guiman.clickable.ClickableBuilder;
+import bet.astral.guiman.permission.Permission;
 import bet.astral.messenger.v2.MessageSender;
 import bet.astral.messenger.v2.Messenger;
 import bet.astral.messenger.v2.component.ComponentType;
@@ -12,6 +13,7 @@ import bet.astral.messenger.v2.translation.TranslationKey;
 import bet.astral.unity.Unity;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.entity.FactionMember;
+import bet.astral.unity.entity.FactionRole;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.messenger.UnityMessenger;
 import de.cubbossa.translations.ComponentSplit;
@@ -179,4 +181,70 @@ public abstract class BaseGUI implements MessageSender.Packed {
 				;
 	}
 
+	public Permission requireNoFaction(String name) {
+		return Permission.of(name).and(Permission.of(c->{
+			if (!(c instanceof Player player)){
+				return false;
+			}
+			try {
+				return unity.getPlayerManager().fromBukkit(player).getFactionId() == null;
+			} catch (NullPointerException e){
+				return true;
+			}
+		}));
+	}
+	public Permission requireFaction(String name) {
+		return Permission.of(name).and(Permission.of(c->{
+			if (!(c instanceof Player player)){
+				return false;
+			}
+			UUID uniqueId = unity.getPlayerManager().fromBukkit(player).getFactionId();
+			return uniqueId != null;
+		}));
+	}
+
+	public Permission requireHaveRole(String name, FactionRole... roles) {
+		return Permission.of(name).and(Permission.of(c->{
+			if (!(c instanceof Player player)){
+				return false;
+			}
+			UUID uniqueId = unity.getPlayerManager().fromBukkit(player).getFactionId();
+			if (uniqueId == null){
+				return false;
+			}
+			UUID factionId = unity.getPlayerManager().fromBukkit(player).getFactionId();
+			Faction faction = unity.getFactionManager().get(factionId);
+			FactionMember member = faction.getMember(player.getUniqueId());
+
+			for (FactionRole role : roles){
+				if (member.getRole()==role){
+					return true;
+				}
+			}
+
+			return false;
+		}));
+	}
+	public Permission requireNotHaveRole(String name, FactionRole... roles) {
+		return Permission.of(name).and(Permission.of(c->{
+			if (!(c instanceof Player player)){
+				return false;
+			}
+			UUID uniqueId = unity.getPlayerManager().fromBukkit(player).getFactionId();
+			if (uniqueId == null){
+				return false;
+			}
+			UUID factionId = unity.getPlayerManager().fromBukkit(player).getFactionId();
+			Faction faction = unity.getFactionManager().get(factionId);
+			FactionMember member = faction.getMember(player.getUniqueId());
+
+			for (FactionRole role : roles){
+				if (member.getRole()==role){
+					return false;
+				}
+			}
+
+			return true;
+		}));
+	}
 }

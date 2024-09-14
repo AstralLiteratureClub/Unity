@@ -2,9 +2,7 @@ package bet.astral.unity.messenger;
 
 import bet.astral.messenger.v2.component.ComponentType;
 import bet.astral.messenger.v2.translation.Translation;
-import bet.astral.messenger.v2.translation.TranslationKey;
-import com.sun.jna.platform.unix.solaris.LibKstat;
-import org.jetbrains.annotations.NotNull;
+import net.kyori.adventure.text.Component;
 
 import java.lang.reflect.Field;
 import java.util.Collection;
@@ -68,6 +66,8 @@ public class Translations {
 	public static final Translation GUI_FACTION_MEMBER_MANAGE = new Translation("gui.faction.member-manage.title").add(ComponentType.CHAT, text("<!italic><aqua>%player%"));
 	public static final Translation GUI_FACTION_KICK = new Translation("gui.faction.kick.title").add(ComponentType.CHAT, text("<!italic><aqua>Confirm <dark_aqua>%player%<aqua>'s kick"));
 	public static final Translation GUI_FACTION_BAN = new Translation("gui.faction.ban.title").add(ComponentType.CHAT, text("<!italic><aqua>Confirm <dark_aqua>%player%<aqua>'s ban"));
+	public static final Translation GUI_FACTION_LEAVE_NAME = new Translation("gui.faction.leave.title").add(ComponentType.CHAT, text("<!italic>Leave <white>%faction%"));
+	public static final Translation GUI_FACTION_LEAVE_DESCRIPTION = new Translation("gui.faction.leave.description").add(ComponentType.CHAT, text("<!italic><gray>Click to leave <white>%faction% <gray>. <red>This action cannot be reversed!"));
 	public static final Translation GUI_FACTION_INVITE = new Translation("gui.faction.invite.title").add(ComponentType.CHAT, text("<!italic><aqua>Invite <dark_gray>(<dark_aqua>%page%<dark_gray>/<dark_aqua>%pages%<dark_gray>)"));
 	public static final Translation GUI_BUTTON_USER_INFO_NAME = new Translation("gui.faction.user.name").add(ComponentType.CHAT, text("<yellow><!italic>%player%"));
 	public static final Translation GUI_BUTTON_USER_INFO_FACTION_DESCRIPTION = new Translation("gui.faction.user.description").add(ComponentType.CHAT,
@@ -200,12 +200,74 @@ public class Translations {
 	public static final Translation GUI_FACTION_MANAGE_NON_MEMBER_UNBAN_TITLE = new Translation("gui.faction.non-members.unban.title").add(ComponentType.CHAT, text("<!italic><yellow>Unban"));
 	public static final Translation GUI_FACTION_MANAGE_NON_MEMBER_UNBAN_DESCRIPTION = new Translation("gui.faction.non-members.unban.description").add(ComponentType.CHAT, text("<!italic><gray>Click to unban <white>%player%<gray> from the faction"));
 
-	public static final Translation MESSAGE_JOIN_BANNED_FROM_FACTION = new Translation("join.error.banned-from-faction").add(ComponentType.CHAT, text("<red>You've been banned from <white>%faction%<red>."));
-	public static final Translation MESSAGE_JOIN_NOT_INVITED = new Translation("join.error.not-invited").add(ComponentType.CHAT, text("<red>You've not been invited to <white>%faction%<red>."));
-	public static final Translation MESSAGE_JOIN_JOINED_USING_INVITE = new Translation("join.success.invite.player").add(ComponentType.CHAT, text("<green>Accepted <white>%faction%<green>'s invite."));
-	public static final Translation BROADCAST_JOIN_JOINED_USING_INVITE = new Translation("join.success.invite.faction").add(ComponentType.CHAT, text("<white>%player%<green> has accepted the faction invite."));
-	public static final Translation MESSAGE_JOIN_JOINED_PUBLIC = new Translation("join.success.public.player").add(ComponentType.CHAT, text("<green>Joined public faction <white>%faction%<green>"));
-	public static final Translation BROADCAST_JOIN_JOINED_PUBLIC = new Translation("join.success.public.faction").add(ComponentType.CHAT, text("<white>%player%<green> has joined the faction."));
+	public static final Translation MESSAGE_JOIN_BANNED_FROM_FACTION = new Translation("join.error.banned-from-faction").add(ComponentType.CHAT, text("<red>You've been banned from <white>%faction%"));
+	public static final Translation MESSAGE_JOIN_NOT_INVITED = new Translation("join.error.not-invited").add(ComponentType.CHAT, text("<red>You've not been invited to <white>%faction%"));
+	public static final Translation MESSAGE_JOIN_JOINED_USING_INVITE = new Translation("join.success.invite.player").add(ComponentType.CHAT, text("<green>Accepted <white>%faction%<green>'s invite"));
+	public static final Translation BROADCAST_JOIN_JOINED_USING_INVITE = new Translation("join.success.invite.faction").add(ComponentType.CHAT, text("<white>%player%<green> has accepted the faction invite"));
+	public static final Translation MESSAGE_JOIN_JOINED_PUBLIC = new Translation("join.success.public.player").add(ComponentType.CHAT, text("<green>Joined public faction <white>%faction%"));
+	public static final Translation BROADCAST_JOIN_JOINED_PUBLIC = new Translation("join.success.public.faction").add(ComponentType.CHAT, text("<white>%player%<green> has joined the faction"));
+
+	public static final Translation COMMAND_FACTION_LEAVE_DESCRIPTION = new Translation("commands.faction.leave.description").add(ComponentType.CHAT, text("Makes the player remove the current faction"));
+	public static final Translation MESSAGE_FACTION_LEAVE = new Translation("leave.success.player").add(ComponentType.CHAT, text("<green>You have left <white>%faction%<green>"));
+	public static final Translation BROADCAST_FACTION_LEAVE = new Translation("leave.success.faction").add(ComponentType.CHAT, text("<white>%player%<dark_red> has left the faction"));
+
+	public static final Translation COMMAND_FACTION_DELETE_DESCRIPTION = new Translation("commands.faction.delete.description").add(ComponentType.CHAT, text("<red>Allows faction leader to delete the faction"));
+	public static final Translation MESSAGE_FACTION_DELETE_CONFIRMED = new Translation("delete.success.confirmed.player").add(ComponentType.CHAT, text("<yellow>Disbanding your faction..."));
+	public static final Translation BROADCAST_FACTION_DELETE_CONFIRMED = new Translation("delete.success.confirmed.faction").add(ComponentType.CHAT, text("\n<white>%player <dark_red>has disbanded the faction\n "));
+	public static final Translation MESSAGE_FACTION_DELETE_TIME_RAN_OUT = new Translation("delete.error.time-ran-out").add(ComponentType.CHAT, text("<red>Your time ran out on the faction deletion"));
+	public static final Translation MESSAGE_FACTION_DELETE_BEGIN = new Translation("delete.success.delete-begin").add(ComponentType.CHAT, text("<yellow>To disband the faction <white>resend previous command<yellow> to confirm the disband."));
+
+	public static final Translation COMMAND_FACTION_INFO_DESCRIPTION = new Translation("commands.info.description").add(ComponentType.CHAT, text("Allows players to see information of a faction or a player"));
+	public static final Translation COMMAND_FACTION_INFO_PLAYER_DESCRIPTION = new Translation("commands.info.description").add(ComponentType.CHAT, text("Allows players to see information of a faction or a player"));
+	public static final Translation COMMAND_FACTION_INFO_FACTION_DESCRIPTION = new Translation("commands.info.description").add(ComponentType.CHAT, text("Allows players to see information of a faction or a player"));
+	public static final Translation MESSAGE_INFO_PLAYER_FACTION = new Translation("info.success.player").add(ComponentType.CHAT,
+			text("").appendNewline(),
+			text("<dark_gray> | <yellow>Player: <white>%player%").appendNewline(),
+			text("<dark_gray> | <yellow>Faction: <white>%faction% <hover:show_text:'<gray>Click to see information of <white>%faction% <gray>in your chat.'><click:run_command:/factions info %faction% no-gui><green><bold>INFO <!bold><dark_gray>(CHAT) </click></hover><reset><dark_gray><bold>| <hover:show_text:'<gray>Click to see information of <white>%faction% <gray> in a GUI.'><click:run_command:/factions info %faction%><green><bold>INFO <gray>(GUI)").appendNewline(),
+			text("")
+	);
+	public static final Translation MESSAGE_INFO_PLAYER_NO_FACTION = new Translation("info.success.player").add(ComponentType.CHAT,
+			text("").appendNewline(),
+			text("<dark_gray> | <yellow>Player: <white>%player%").appendNewline(),
+			text("<dark_gray> | <red>No faction").appendNewline(),
+			text("")
+	);
+	public static final Translation MESSAGE_INFO_FACTION_FRONT = new Translation("info.success.faction.front").add(ComponentType.CHAT,
+			text("").appendNewline(),
+			text("<dark_gray> | <yellow>Name: <white>%faction%").appendNewline(),
+			text("<dark_gray> | <yellow>Members: <white>%members_size% <gray>(<hover:show_text:'<gray>Click to see members and roles'><click:run_command:/factions info %faction% members><green><bold>OPEN<reset><gray>)").appendNewline(),
+			text("")
+	);
+	public static final Translation MESSAGE_INFO_FACTION_MEMBERS = new Translation("info.success.faction.members").add(ComponentType.CHAT,
+			text("").appendNewline(),
+			text("<dark_gray> | <yellow>Members <white>%members%").appendNewline(),
+			text("<dark_gray> | <yellow>%owner% <gray>(<yellow>%owners%<gray>) <hover:show_text:'<gray>Click to view owners of the faction'><click:run_command:/factions info %faction% members owner><green><bold>VIEW").appendNewline(),
+			text("<dark_gray> | <yellow>%co-owner% <gray>(<yellow>%co-owners%<gray>) <hover:show_text:'<gray>Click to view co-owners of the faction'><click:run_command:/factions info %faction% members co-owner><green><bold>VIEW").appendNewline(),
+			text("<dark_gray> | <yellow>%admin% <gray>(<yellow>%admins%<gray>) <hover:show_text:'<gray>Click to view admins of the faction'><click:run_command:/factions info %faction% members admin><green><bold>VIEW").appendNewline(),
+			text("<dark_gray> | <yellow>%moderator% <gray>(<yellow>%moderator%<gray>) <hover:show_text:'<gray>Click to view moderators of the faction'><click:run_command:/factions info %faction% members moderator><green><bold>VIEW").appendNewline(),
+			text("<dark_gray> | <yellow>%member% <gray>(<yellow>%members%<gray>) <hover:show_text:'<gray>Click to view members of the faction'><click:run_command:/factions info %faction% members member><green><bold>VIEW").appendNewline(),
+			text("<dark_gray> | <yellow>%guest% <gray>(<yellow>%guests%<gray>) <hover:show_text:'<gray>Click to view guests of the faction'><click:run_command:/factions info %faction% members guest><green><bold>VIEW").appendNewline(),
+			text("")
+	);
+	public static final Translation MESSAGE_INFO_FACTION_MEMBER_ROLE = new Translation("info.success.faction.member-global").add(ComponentType.CHAT,
+			text("").appendNewline(),
+			text("<dark_gray> | <yellow>Role: <white>%role% <gray><italic>(page %page%)<reset>").appendNewline(),
+			text("<dark_gray> | <yellow>Members <white>%members%").appendNewline(),
+			text("%list_members%").appendNewline(),
+			text("<dark_gray> | <gray>(%page_previous%) <yellow>PREVIOUS PAGE <dark_gray>-------------------- <yellow>NEXT PAGE <gray>(%page_next%)").appendNewline(),
+			text("")
+	);
+	public static final Translation MESSAGE_INFO_FACTION_MEMBER_ROLE_MEMBER = new Translation("info.success.faction.member-individual").add(ComponentType.CHAT,
+			text("<dark_gray> - <yellow>%role_player% <gray>(<white>%role_name%)").appendNewline(),
+			text("<dark_gray> | <yellow>Members <white>%members%").appendNewline(),
+			text("%list_members%").appendNewline(),
+			text("<dark_gray> | <gray>(%page_previous%) <yellow>PREVIOUS PAGE <dark_gray>-------------------- <yellow>NEXT PAGE <gray>(%page_next%)").appendNewline(),
+			text("")
+			);
+	public static final Translation MESSAGE_INFO_FACTION_MEMBER_ROLE_MEMBER_MANAGE = new Translation("info.success.faction.member-individual").add(ComponentType.CHAT,
+			text("<dark_gray> - <yellow>%role_player% <gray>(<white>%role_name%) <green><bold>VIEW <gray>(<dark_red><bold>DEMOTE<reset><dark_gray>/<green><bold>PROMOTE<gray>)"));
+	public static final Translation COMMA_INFO_FACTION_MEMBER_ROLE_MEMBERS = new Translation("info.success.faction.member.individual.comma").add(ComponentType.CHAT, Component.newline());
+
 
 	/**
 	 * Returns all translation keys used by unity.

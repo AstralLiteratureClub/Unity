@@ -1,6 +1,6 @@
 plugins {
     id 'java'
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "1.7.2"
 }
 
 repositories {
@@ -26,11 +26,11 @@ repositories {
 var serverVersion = "1.21"
 var cloudVersion = "2.0.0-beta.8"
 var cloudTranslationsVersion = "1.0.0-beta.2"
-var messengerVersion = "2.0.7"
+var messengerVersion = "2.0.8"
 var shineVersion = "1.0.0"
 var more4JVersion = "1.0.1"
 var cloudPlusPlusVersion = "1.2.6"
-var guiManVersion = "1.1.4"
+var guiManVersion = "1.1.5"
 
 dependencies {
     compileOnly(project(":"))

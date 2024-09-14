@@ -9,16 +9,20 @@ import org.checkerframework.checker.nullness.qual.NonNull;
 import org.incendo.cloud.permission.PermissionResult;
 import org.incendo.cloud.permission.PredicatePermission;
 
-public enum Permission implements PredicatePermission<CommandSender> {
-	KICK_MEMBERS,
-	BAN_PLAYERS,
-	BEGIN_WAR,
-	BEGIN_WAR_VOTE,
-	INVITE,
-	CANCEL_INVITE
-	;
+public class Permission implements PredicatePermission<CommandSender> {
+	public static final Permission BAN_PLAYERS = new Permission("unity:ban");
+	public static final Permission KICK_MEMBERS = new Permission("unity:kick");
+//	public static final Permission BEGIN_WAR = new Permission("unity:ban"),
+//	public static final Permission BEGIN_WAR_VOTE,
+	public static final Permission INVITE = new Permission("unity:invite");
+	public static final Permission CANCEL_INVITE = new Permission("unity:cancel_invite");
 
 	private static Unity unity;
+	private final String name;
+
+	public Permission(String name) {
+		this.name = name;
+	}
 
 	private Unity fetchUnity(){
 		if (unity != null){

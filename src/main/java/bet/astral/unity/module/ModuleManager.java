@@ -1,7 +1,9 @@
 package bet.astral.unity.module;
 
 import bet.astral.unity.Unity;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
+import bet.astral.unity.module.bootstrap.BootstrapContext;
+import bet.astral.unity.module.bootstrap.SubModuleBootstrap;
 import io.github.classgraph.ClassGraph;
 import io.github.classgraph.ScanResult;
 import org.jetbrains.annotations.ApiStatus;
@@ -37,7 +39,7 @@ public class ModuleManager {
 		BuiltInModules.fetch(this);
 	}
 	@ApiStatus.Internal
-	public void bootstrap(){
+	public void bootstrap(BootstrapContext bootstrapContext){
 		List<String> classes = new ArrayList<>(Arrays.stream(BUILT_IN_ADDONS).toList());
 
 		for (String var : classes) {
@@ -48,6 +50,8 @@ public class ModuleManager {
 					Constructor<?> constructor = clazz.getConstructor();
 					SubModuleBootstrap<?> bootstrap = (SubModuleBootstrap<?>) constructor.newInstance();
 					ModuleManager.bootstraps.put(bootstrap.getClass().getName(), bootstrap);
+
+					bootstrap.bootstrap(bootstrapContext);
 				} catch (NoSuchMethodException | InvocationTargetException | InstantiationException |
 				         IllegalAccessException e) {
 					throw new RuntimeException(e);
@@ -60,6 +64,9 @@ public class ModuleManager {
 	@ApiStatus.Internal
 	public void commands(UnityCommandBootstrapRegister commandBootstrapRegister){
 		for (SubModuleBootstrap<?> bootstrap : bootstraps.values()){
+			if (bootstrap.getCommandBootstrap().getRootCommand() != null){
+				bootstrap.getCommandBootstrap().registerRoot(commandBootstrapRegister);
+			}
 			bootstrap.getCommandBootstrap().register(commandBootstrapRegister);
 		}
 	}

@@ -1,6 +1,7 @@
 package bet.astral.unity.module;
 
 import bet.astral.unity.Unity;
+import bet.astral.unity.module.bootstrap.SubModuleBootstrap;
 import lombok.Getter;
 import net.kyori.adventure.text.logger.slf4j.ComponentLogger;
 import org.jetbrains.annotations.ApiStatus;
@@ -14,7 +15,7 @@ public abstract class SubModule {
 
 	protected SubModule(Unity unity, SubModuleBootstrap<?> subModuleBootstrap) {
 		this.unity = unity;
-		hasCommands = !subModuleBootstrap.getCommandBootstrap().getClasses().isEmpty() || subModuleBootstrap.getCommandBootstrap().getPackages().isEmpty();
+		hasCommands = !subModuleBootstrap.getCommandBootstrap().getClasses().isEmpty() || subModuleBootstrap.getCommandBootstrap().getPackages().isEmpty() || subModuleBootstrap.getCommandBootstrap().getRootCommand() != null;
 	}
 
 	@ApiStatus.Internal

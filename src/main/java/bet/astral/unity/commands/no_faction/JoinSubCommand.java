@@ -2,7 +2,7 @@ package bet.astral.unity.commands.no_faction;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.arguments.JoinableFactionParser;
 import bet.astral.unity.messenger.Translations;
 import org.bukkit.command.CommandSender;
@@ -16,7 +16,7 @@ public class JoinSubCommand extends UnityCommand {
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(factionRoot, "join", Translations.COMMAND_NO_FACTION_JOIN_FACTION_DESCRIPTION, p->
 				p.permission(requireNoFaction("join"))
 						.required(JoinableFactionParser.joinableComponent().name("faction"))

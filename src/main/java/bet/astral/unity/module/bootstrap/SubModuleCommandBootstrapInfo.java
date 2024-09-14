@@ -1,6 +1,7 @@
 package bet.astral.unity.module.bootstrap;
 
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
+import bet.astral.unity.commands.BaseCommand;
 import lombok.Getter;
 import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
@@ -12,7 +13,13 @@ import java.util.HashSet;
 public class SubModuleCommandBootstrapInfo {
 	private final HashSet<String> packages = new HashSet<>();
 	private final HashSet<Class<?>> classes = new HashSet<>();
+	private Class<? extends BaseCommand> rootCommand = null;
 	private boolean registered = false;
+
+	public void registerRootCommand(@NotNull Class<? extends BaseCommand> root){
+		this.rootCommand = root;
+	}
+
 	public void registerPackage(@NotNull Package pkg){
 		registerPackages(pkg);
 	}
@@ -70,6 +77,13 @@ public class SubModuleCommandBootstrapInfo {
 			} catch (ClassNotFoundException e) {
 				throw new RuntimeException(e);
 			}
+		}
+	}
+
+	@ApiStatus.Internal
+	public void registerRoot(UnityCommandBootstrapRegister commandBootstrapRegister) {
+		if (rootCommand != null){
+			commandBootstrapRegister.registerCommand(rootCommand);
 		}
 	}
 }

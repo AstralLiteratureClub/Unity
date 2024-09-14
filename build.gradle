@@ -3,16 +3,18 @@ plugins {
     id 'java'
     id("io.github.goooler.shadow") version "8.1.8"
     id 'io.freefair.lombok' version '8.6'
-    id("io.papermc.paperweight.userdev") version "1.7.1"
+    id("io.papermc.paperweight.userdev") version "1.7.2"
     id("xyz.jpenilla.run-paper") version "2.3.0"
     id 'maven-publish'
 }
+
 repositories {
     mavenLocal()
     mavenCentral()
     maven { url "https://repo.papermc.io/repository/maven-public/" }
     maven { url 'https://oss.sonatype.org/content/repositories/snapshots/' }
     maven { url 'https://jitpack.io' }
+
 
 
     // PAPI
@@ -37,11 +39,11 @@ var serverVersion = "1.21"
 var cloudVersion = "2.0.0-beta.8"
 var cloudTranslationsVersion = "1.0.0-beta.2"
 
-var messengerVersion = "2.0.7"
+var messengerVersion = "2.0.9"
 var shineVersion = "1.0.0"
 var more4JVersion = "1.0.1"
 var cloudPlusPlusVersion = "1.2.6"
-var guiManVersion = "1.1.4"
+var guiManVersion = "1.1.5"
 
 dependencies {
     implementation 'bet.astral:messenger:'+messengerVersion
@@ -54,7 +56,8 @@ dependencies {
     implementation 'bet.astral:cloudplusplus:'+cloudPlusPlusVersion
     implementation 'bet.astral:cloudplusplus-paper:'+cloudPlusPlusVersion
     implementation 'bet.astral:guiman:'+guiManVersion
-    implementation(project(":ally"))
+    // Builtin extra-modules
+//    implementation(project(":ally"))
 
     // LOMBOK
     compileOnly 'org.projectlombok:lombok:1.18.34'
@@ -83,7 +86,7 @@ shadowJar {
     relocate 'bet.astral.messenger', 'bet.astral.unity.libs.messenger'
     relocate 'bet.astral.tuples', 'bet.astral.unity.libs.tuples'
     relocate 'bet.astral.shine', 'bet.astral.unity.libs.shine'
-    relocate 'bet.astral.cloudplusplus', 'bet.unity.fluffy.libs.cloudplusplus'
+    relocate 'bet.astral.cloudplusplus', 'bet.unity.libs.cloudplusplus'
     relocate 'bet.astral.guiman', 'bet.astral.unity.libs.guiman'
     relocate 'bet.astral.signman', 'bet.astral.unity.libs.signman'
     relocate 'io.github.classgraph', 'bet.astral.unity.libs.classgraph'

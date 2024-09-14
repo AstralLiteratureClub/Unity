@@ -1,11 +1,11 @@
 package bet.astral.unity.module;
 
-import bet.astral.unity.alliance.Alliance;
-
 public class BuiltInModules {
-	public static Alliance ALLIANCE;
+	public static SubModule ALLIANCE;
 
 	static void fetch(ModuleManager moduleManager){
-		ALLIANCE = moduleManager.getSubModule(Alliance.class);
+		try {
+			ALLIANCE = (SubModule) moduleManager.getSubModule(Class.forName("bet.astral.unity.alliance.Alliance"));
+		} catch (ClassNotFoundException ignored) {}
 	}
 }

@@ -1,7 +1,7 @@
 package bet.astral.unity.commands.debug;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
@@ -18,7 +18,7 @@ public class DebugForceLoadCommand extends DebugCommand{
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(debugRoot, "loadplayer", Translations.COMMAND_FACTION_DEBUG_FORCE_LOAD, b->
 				b.permission("unity.debug.load")
 						.required(OfflinePlayerParser.offlinePlayerComponent().name("player"))

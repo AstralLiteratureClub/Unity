@@ -1,7 +1,7 @@
 name: Unity
 version: '1.0.0'
 main: bet.astral.unity.Unity
-bootstrapper: bet.astral.unity.UnityBootstrap
+bootstrapper: bet.astral.unity.bootstrap.UnityBootstrap
 api-version: '1.21'
 prefix: Unity
 authors: [ Antritus ]

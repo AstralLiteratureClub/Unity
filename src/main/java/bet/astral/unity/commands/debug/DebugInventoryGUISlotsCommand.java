@@ -5,7 +5,7 @@ import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.guiman.gui.InventoryGUI;
 import bet.astral.guiman.gui.builders.InventoryGUIBuilder;
 import bet.astral.messenger.v2.translation.TranslationKey;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.format.TextDecoration;
@@ -29,7 +29,7 @@ public class DebugInventoryGUISlotsCommand extends DebugCommand {
 	public DebugInventoryGUISlotsCommand(UnityCommandBootstrapRegister registerer, PaperCommandManager.Bootstrapped<CommandSender> commandManager) {
 		super(registerer, commandManager);
 	}
-	public void init(){
+	public void registerCommands(){
 		command(debugRoot, "slots", Translations.COMMAND_FACTION_DEBUG_GUI_SLOTS_DESCRIPTION, b->
 				b.permission("unity.debug.slots")
 						.optional(EnumParser.enumComponent(InventoryType.class)

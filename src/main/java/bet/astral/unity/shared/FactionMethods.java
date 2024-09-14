@@ -1,6 +1,7 @@
 package bet.astral.unity.shared;
 
 import bet.astral.messenger.v2.component.ComponentType;
+import bet.astral.messenger.v2.placeholder.Placeholder;
 import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.messenger.v2.placeholder.collection.PlaceholderMap;
 import bet.astral.messenger.v2.placeholder.values.PlaceholderValue;
@@ -20,6 +21,7 @@ import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.JoinConfiguration;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
+import org.checkerframework.checker.nullness.qual.NonNull;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -330,5 +332,78 @@ public class FactionMethods {
 			menuFunction.accept(player);
 		}
 
+	}
+
+	/**
+	 * Makes the player leave their current faction.
+	 * @param player player
+	 * @param menuFunction function ran when executed
+	 */
+	public void leave(@NonNull Player player, Consumer<Player> menuFunction) {
+		bet.astral.unity.entity.Player fPlayer = playerManager.fromBukkit(player);
+		if (fPlayer.getFactionId()==null){
+			if (menuFunction != null){
+				unity.getGuiHandler().openMainMenu(player);
+			}
+			return;
+		}
+
+		Faction faction = manager.get(fPlayer.getFactionId());
+		assert faction != null;
+
+		FactionMember member = faction.getMember(player.getUniqueId());
+		if (member.getRole()==FactionRole.OWNER){
+			if (menuFunction != null){
+				unity.getGuiHandler().openMainMenu(player);
+			}
+			return;
+		}
+
+		fPlayer.setFactionId(null);
+		faction.getMembers().remove(member.getUniqueId());
+		database.save(faction);
+		playerDatabase.save(fPlayer);
+
+		PlaceholderList placeholders = new PlaceholderList();
+		placeholders.add("player", player.getName());
+		placeholders.add("faction", faction.getName());
+		placeholders.add("role_name", PlaceholderValue.translation(member.getRole().getPrefixName(), ComponentType.CHAT));
+		placeholders.add("role_player", PlaceholderValue.translation(member.getRole().getPrefix(), ComponentType.CHAT, Placeholder.of("player", player.name())));
+		getMessenger().message(player, Translations.MESSAGE_FACTION_LEAVE, placeholders);
+		faction.message(Translations.BROADCAST_FACTION_LEAVE, placeholders);
+
+		if (menuFunction != null){
+			menuFunction.accept(player);
+		}
+	}
+
+	public void delete(Player player) {
+		bet.astral.unity.entity.Player fPlayer = unity().getPlayerManager().fromBukkit(player);
+		if (fPlayer.getFactionId()==null){
+			// Unlikely
+			return;
+		}
+		Faction faction = unity().getFactionManager().get(fPlayer.getFactionId());
+		PlaceholderList placeholders = new PlaceholderList();
+		placeholders.add("player", player.getName());
+		placeholders.add("faction", faction.getName());
+
+		getMessenger().message(player, Translations.MESSAGE_FACTION_DELETE_CONFIRMED, placeholders);
+		faction.message(Translations.BROADCAST_FACTION_DELETE_CONFIRMED, placeholders);
+		unity().getFactionManager().unload(faction.getUniqueId());
+		unity().getFactionDatabase().delete(faction.getUniqueId());
+		unity().getFactionInfoDatabase().delete(faction.getUniqueId());
+
+		for (FactionMember member : faction.getMembers().values()) {
+			boolean cached = unity().getPlayerManager().get(member.getUniqueId()) != null;
+			unity().getPlayerManager().getOrLoadAndCache(member.getUniqueId())
+					.thenAccept(memberPlayer->{
+						memberPlayer.setFactionId(null);
+						unity().getPlayerDatabase().save(memberPlayer);
+						if (!cached){
+							unity().getPlayerManager().unload(memberPlayer.getUniqueId());
+						}
+					});
+		}
 	}
 }

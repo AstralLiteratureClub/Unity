@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction.invite;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.arguments.InvitableParser;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
@@ -17,7 +17,7 @@ public class InviteSubCommand extends UnityCommand {
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(factionRoot, "invite", Translations.COMMAND_FACTION_INVITE_DESCRIPTION, b -> b
 						.permission(requireFaction("unity.invite").and(Permission.INVITE))
 						.optional("who", InvitableParser.invitableParser())

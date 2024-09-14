@@ -1,4 +1,4 @@
-package bet.astral.unity.commands;
+package bet.astral.unity.bootstrap;
 
 import bet.astral.cloudplusplus.paper.bootstrap.BootstrapCommandRegisterer;
 import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;

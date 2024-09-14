@@ -109,6 +109,16 @@ public class GsonFactionDatabase implements FactionDatabase, FactionInfoDatabase
 		});
 	}
 
+	@Override
+	public CompletableFuture<Void> delete(@NotNull UUID faction) {
+		return CompletableFuture.runAsync(()->{
+			if ((getDataFolder(faction) == null || !getDataFolder(faction).exists())){
+				return;
+			}
+			getDataFolder(faction).delete();
+		});
+	}
+
 	public JsonObject read(File file){
 		return read(file, JsonObject.class);
 	}

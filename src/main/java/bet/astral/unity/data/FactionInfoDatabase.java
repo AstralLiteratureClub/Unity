@@ -15,4 +15,5 @@ public interface FactionInfoDatabase {
 	CompletableFuture<Collection<String>> getAllExistingNames();
 	CompletableFuture<UUID> getIdFromName(@NotNull String name);
 	CompletableFuture<String> getNameFromId(@NotNull UUID uniqueId);
+	CompletableFuture<Void> delete(@NotNull UUID faction);
 }

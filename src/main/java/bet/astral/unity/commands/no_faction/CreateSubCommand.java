@@ -3,7 +3,7 @@ package bet.astral.unity.commands.no_faction;
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.data.FactionDatabase;
 import bet.astral.unity.data.PlayerDatabase;
 import bet.astral.unity.entity.Faction;
@@ -26,7 +26,7 @@ public class CreateSubCommand extends UnityCommand {
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(factionRoot, "create", Translations.COMMAND_FACTION_CREATE_DESCRIPTION, b->
 				b
 						.senderType(Player.class)

@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction.manage;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.arguments.MemberParser;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
@@ -21,7 +21,7 @@ public class KickSubCommand extends UnityCommand {
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(factionRoot, "kick", Translations.COMMAND_FACTION_KICK_DESCRIPTION,
 				b->
 						b.permission(requireFaction("unity.kick").and(Permission.KICK_MEMBERS))

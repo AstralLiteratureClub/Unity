@@ -2,7 +2,7 @@ package bet.astral.unity.commands.faction.manage;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
 import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.permission.Permission;
 import net.kyori.adventure.text.Component;
@@ -21,7 +21,7 @@ public class BanSubCommand extends UnityCommand {
 	}
 
 	@Override
-	public void init() {
+	public void registerCommands() {
 		command(factionRoot, "ban", Translations.COMMAND_FACTION_BAN_DESCRIPTION,
 				b->
 						b.permission(requireFaction("unity.ban").and(Permission.BAN_PLAYERS))

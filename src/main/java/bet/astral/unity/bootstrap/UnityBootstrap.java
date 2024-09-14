@@ -1,4 +1,4 @@
-package bet.astral.unity;
+package bet.astral.unity.bootstrap;
 
 import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;
 import bet.astral.messenger.v2.component.ComponentType;
@@ -8,8 +8,8 @@ import bet.astral.messenger.v2.locale.source.FileLanguageSource;
 import bet.astral.messenger.v2.locale.source.LanguageSource;
 import bet.astral.messenger.v2.translation.Translation;
 import bet.astral.messenger.v2.translation.serializer.gson.TranslationGsonHelper;
-import bet.astral.unity.commands.UnityCommand;
-import bet.astral.unity.commands.UnityCommandBootstrapRegister;
+import bet.astral.unity.Unity;
+import bet.astral.unity.commands.RootCommand;
 import bet.astral.unity.commands.debug.DebugCommand;
 import bet.astral.unity.messenger.Translations;
 import bet.astral.unity.messenger.UnityMessenger;
@@ -34,14 +34,15 @@ import java.util.Locale;
 @Getter
 public class UnityBootstrap implements PluginBootstrap {
 	public static final boolean MODULES = false;
+	public static final boolean ALWAYS_DELETE_MESSAGES = true;
 	private final ModuleManager moduleManager = new ModuleManager();
 	private UnityCommandBootstrapRegister commandRegistrer;
 	private final BootstrapHandler afterBootstrap = new BootstrapHandler();
 	private UnityMessenger messenger = new UnityMessenger();
 	@Override
 	public void bootstrap(@NotNull BootstrapContext context) {
-		File file = new File(context.getPluginSource().toFile().getParentFile(), "unity/messages/en_us.json");
-		if (file.exists()){
+		File file = new File(context.getDataDirectory().toFile(), "unity/messages/unity/en_us.json");
+		if (file.exists() && ALWAYS_DELETE_MESSAGES){
 			file.delete();
 		}
 		if (!file.exists()) {
@@ -79,11 +80,17 @@ public class UnityBootstrap implements PluginBootstrap {
 		}
 		commandRegistrer = new UnityCommandBootstrapRegister(messenger, afterBootstrap, context);
 		messenger.registerTo(commandRegistrer.getCommandManager());
-		new UnityCommand(commandRegistrer, commandRegistrer.getCommandManager());
+
+		new RootCommand(commandRegistrer, commandRegistrer.getCommandManager());
+
 		new DebugCommand(commandRegistrer, commandRegistrer.getCommandManager());
+
 		commandRegistrer.registerCommands("bet.astral.unity.commands");
 		if (MODULES) {
-			moduleManager.bootstrap();
+			bet.astral.unity.module.bootstrap.BootstrapContext bootstrapContext = new bet.astral.unity.module.bootstrap.BootstrapContext(messenger,
+					context.getDataDirectory());
+			moduleManager.bootstrap(bootstrapContext);
+			moduleManager.commands(commandRegistrer);
 		}
 	}
 

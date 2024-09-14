@@ -11,4 +11,5 @@ public interface FactionDatabase {
 	CompletableFuture<@Nullable Faction> load(@NotNull UUID faction);
 	CompletableFuture<Void> save(@NotNull Faction faction);
 	CompletableFuture<@NotNull Faction> update(@Nullable Faction faction, @NotNull UUID uniqueId);
+	CompletableFuture<Void> delete(@NotNull UUID faction);
 }
