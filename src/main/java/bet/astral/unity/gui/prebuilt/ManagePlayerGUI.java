@@ -76,7 +76,7 @@ public class ManagePlayerGUI extends BaseGUI implements PrebuiltGUI<OfflinePlaye
 						if (closeConsumer != null) closeConsumer.accept(p, obj);
 					})
 					.addClickable(rows.getSlots() - 5, Clickable.builder(Material.BARRIER).title(returnTitle).description(returnDescription)
-							.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1, obj)))
+							.actionGeneral((action) -> returnConsumer.accept(action.getWho(), obj)))
 					.background(background);
 
 			CachedData cachedData = new PlayerCachedData(obj, obj.getUniqueId(), unity.getPlayerManager().get(obj.getUniqueId()));

@@ -134,7 +134,7 @@ public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? ext
 							})
 							.title(headName)
 							.description(headLore)
-					.actionGeneral((clickable, itemStack, player1) -> clickConsumer.accept(player1, offlinePlayer))
+					.actionGeneral((action) -> clickConsumer.accept(action.getWho(), offlinePlayer))
 					.priority(100)
 			);
 			i++;
@@ -146,21 +146,21 @@ public class PlayerGUI extends BaseGUI implements PrebuiltGUI<Triplet<List<? ext
 						.title(previousPageName)
 						.description(previousPageLore)
 						.permission(bet.astral.guiman.permission.Permission.of(p -> !firstPage))
-						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage-1)))
+						.actionGeneral((action) -> openData(action.getWho(), data.cloneAsMutable().setSecond(currentPage-1)))
 						.priority(100)
 				)
 				.clickable(maxSlots-5, Clickable.builder(Material.BARRIER)
 						.placeholderGenerator(p->placeholders)
 						.title(returnName)
 						.description(returnLore)
-						.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)))
+						.actionGeneral((action) -> returnConsumer.accept(action.getWho())))
 
 				.addClickable(maxSlots-1, Clickable.builder(Material.ARROW)
 						.placeholderGenerator(p->placeholders)
 						.title(nextPageName)
 						.description(nextPageLore)
 						.permission(bet.astral.guiman.permission.Permission.of(p -> !lastPage))
-						.actionGeneral((clickable, itemStack, player1) -> openData(player1, data.cloneAsMutable().setSecond(currentPage+1)))
+						.actionGeneral((action) -> openData(action.getWho(), data.cloneAsMutable().setSecond(currentPage+1)))
 						.priority(100)
 				);
 

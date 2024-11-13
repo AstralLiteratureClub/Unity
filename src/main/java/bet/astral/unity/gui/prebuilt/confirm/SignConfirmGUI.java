@@ -86,7 +86,7 @@ public class SignConfirmGUI extends ConfirmGUI implements PrebuiltGUI<Object> {
 				.placeholderGenerator(p->placeholders)
 				.title(confirmSignItemName)
 				.description(confirmSignItemLore)
-				.actionGeneral((clickable, itemStack, player1) -> gui.open(player1))
+				.actionGeneral((action) -> gui.open(action.getWho()))
 				.priority(100);
 
 		return super.generateGUI(player, obj, placeholders)

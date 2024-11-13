@@ -80,13 +80,13 @@ public class ConfirmGUI extends BaseGUI implements PrebuiltGUI<Object> {
 		ClickableBuilder confirm = Clickable.builder(Material.GREEN_STAINED_GLASS_PANE, meta -> {
 			meta.setCustomModelData(444444440);
 		}).placeholderGenerator(p->placeholders).title(confirmItemName).description(confirmItemLore)
-				.actionGeneral((clickable, itemStack, player1) -> confirmConsumer.accept(player1))
+				.actionGeneral((action) -> confirmConsumer.accept(action.getWho()))
 				.priority(10);
 
 		ClickableBuilder cancel = Clickable.builder(Material.RED_STAINED_GLASS_PANE, meta -> {
 					meta.setCustomModelData(444444441);
 				}).placeholderGenerator(p->placeholders).title(cancelItemName).description(cancelItemLore)
-				.actionGeneral((clickable, itemStack, player1) -> cancelConsumer.accept(player1))
+				.actionGeneral((action) -> cancelConsumer.accept(action.getWho()))
 				.priority(10);
 
 		return InventoryGUI.builder(2)
@@ -108,6 +108,6 @@ public class ConfirmGUI extends BaseGUI implements PrebuiltGUI<Object> {
 						.placeholderGenerator(p->placeholders(player, null))
 						.title(returnItemName)
 						.description(returnItemLore)
-						.actionGeneral((clickable, itemStack, player1) -> returnConsumer.accept(player1)));
+						.actionGeneral((action) -> returnConsumer.accept(action.getWho())));
 	}
 }

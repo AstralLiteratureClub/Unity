@@ -22,8 +22,8 @@ public class GUIBackgrounds {
 	}).priority(0).build();
 	public static final Clickable COMING_SOON = Clickable.builder(Material.BARRIER)
 			.title(Translations.GUI_BUTTON_COMING_SOON_NAME).description(Translations.GUI_BUTTON_COMING_SOON_LORE)
-			.actionGeneral((clickable, itemStack, player) -> {
-				Unity.getPlugin(Unity.class).message(player, Translations.MESSAGE_COMING_SOON);
+			.actionGeneral((action) -> {
+				Unity.getPlugin(Unity.class).message(action.getWho(), Translations.MESSAGE_COMING_SOON);
 			}).priority(0).build();
 
 	public static final Background PLAYERS = new PatternBackgroundBuilder()
