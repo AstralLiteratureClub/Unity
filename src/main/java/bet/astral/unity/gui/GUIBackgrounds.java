@@ -43,8 +43,8 @@ public class GUIBackgrounds {
 	public static final Background MANAGE = new PatternBackgroundBuilder()
 			.pattern("xxxxxxxxx", "yyyyyyyyy").clickable('x', COMING_SOON).clickable('y', DARK_GLASS_PANE).build();
 
-	public static final Background DARK = new StaticBackground(DARK_GLASS_PANE);
-	public static final Background LIGHT = new StaticBackground(LIGHT_GLASS_PANE);
+	public static final Background DARK = Background.tooltip(DARK_GLASS_PANE);
+	public static final Background LIGHT = Background.tooltip(LIGHT_GLASS_PANE);
 
 	public static final Background BANNER_BUILDER = new PatternBackgroundBuilder()
 			.clickable('a', DARK_GLASS_PANE)

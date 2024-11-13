@@ -3,7 +3,7 @@ package bet.astral.unity.gui;
 import bet.astral.guiman.clickable.Clickable;
 import bet.astral.guiman.clickable.ClickableBuilder;
 import bet.astral.guiman.permission.Permission;
-import bet.astral.messenger.v2.MessageSender;
+import bet.astral.messenger.v2.utils.MessageSender;
 import bet.astral.messenger.v2.Messenger;
 import bet.astral.messenger.v2.component.ComponentType;
 import bet.astral.messenger.v2.placeholder.Placeholder;
