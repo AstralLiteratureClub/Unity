@@ -214,8 +214,8 @@ public class MembersGUI extends FactionBaseGUI {
 					return (member.hasPermission(Permission.KICK_MEMBERS) || member.hasPermission(Permission.BAN_PLAYERS));
 				})
 				.displayIfNoPermissions()
-				.actionGeneral((clickable, itemStack, player1) -> {
-					modifyingMembers.put(player1.getUniqueId(), offlinePlayer.getUniqueId());
+				.actionGeneral((action) -> {
+					modifyingMembers.put(action.getWho().getUniqueId(), offlinePlayer.getUniqueId());
 					confirmKickGUI.open(player, placeholders);
 				});
 		ClickableBuilder ban = Clickable.builder(Material.DIAMOND_AXE).
@@ -227,8 +227,8 @@ public class MembersGUI extends FactionBaseGUI {
 					return (member.hasPermission(Permission.KICK_MEMBERS) || member.hasPermission(Permission.BAN_PLAYERS));
 				})
 				.displayIfNoPermissions()
-				.actionGeneral((clickable, itemStack, player1) -> {
-					modifyingMembers.put(player1.getUniqueId(), offlinePlayer.getUniqueId());
+				.actionGeneral((action) -> {
+					modifyingMembers.put(action.getWho().getUniqueId(), offlinePlayer.getUniqueId());
 					confirmBanGUI.open(player, placeholders);
 				});
 
@@ -241,7 +241,7 @@ public class MembersGUI extends FactionBaseGUI {
 				.addClickable(1, ban)
 				.addClickable(13, Clickable.builder(Material.BARRIER)
 						.title(Translations.GUI_BUTTON_MEMBER_MANAGE_RETURN_NAME).description(Translations.GUI_BUTTON_BAN_RETURN_LORE)
-						.actionGeneral((clickable, itemStack, player1) -> openMembers(player1)))
+						.actionGeneral((action) -> openMembers(action.getWho())))
 				.build()
 				.open(player);
 	}

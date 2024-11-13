@@ -34,7 +34,7 @@ public class NoFactionGUI extends BaseGUI implements RootGUI {
 				.title(Translations.GUI_NO_FACTION)
 				.background(GUIBackgrounds.DARK)
 				.addClickable(13, Clickable.builder(Material.OAK_SIGN).title(Translations.GUI_BUTTON_CREATE_FACTION_NAME).description(Translations.GUI_BUTTON_CREATE_FACTION_DESCRIPTION)
-						.actionGeneral((clickable, itemStack, player1) -> {
+						.actionGeneral(action -> {
 							new SignGUIBuilder()
 									.setLines(splitComponent(player, Translations.SIGN_GUI_TEXT_CREATE).toArray(Component[]::new))
 									.setHandler(() -> List.of(

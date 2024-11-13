@@ -88,12 +88,12 @@ public class DebugInventoryGUISlotsCommand extends DebugCommand {
 								int finalI = i;
 								itemStack.editMeta(meta-> meta.displayName(Component.text(finalI).decoration(TextDecoration.ITALIC, false)));
 								itemStack.setAmount(i);
-								builder.addClickable(i, new ClickableBuilder(itemStack).actionGeneral(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ finalI))));
+								builder.addClickable(i, new ClickableBuilder(itemStack).actionGeneral(((action) -> action.getWho().sendRichMessage("<gray>Clicked on slot: <yellow>"+ finalI))));
 							}
 							ItemStack itemStack = ItemStack.of(Material.RED_STAINED_GLASS_PANE);
 							itemStack.editMeta(meta-> meta.displayName(Component.text(0).decoration(TextDecoration.ITALIC, false)));
 							itemStack.setAmount(1);
-							builder.addClickable(0, new ClickableBuilder(itemStack).actionGeneral(((clickable, itemStack1, player1) -> player1.sendRichMessage("<gray>Clicked on slot: <yellow>"+ 0))));
+							builder.addClickable(0, new ClickableBuilder(itemStack).actionGeneral(((action) -> action.getWho().sendRichMessage("<gray>Clicked on slot: <yellow>"+ 0))));
 
 							InventoryGUI gui = builder.build();
 							guis.put(type, gui);

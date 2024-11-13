@@ -40,9 +40,9 @@ public class FactionGUI extends BaseGUI implements RootGUI {
 				.title(Translations.GUI_FACTION)
 				.background(GUIBackgrounds.MAIN_MENU)
 				.addClickable(16, randomPlayer(player, faction.getInvitablePlayers(), Translations.GUI_BUTTON_FACTION_NON_MEMBERS_NAME, Translations.GUI_BUTTON_FACTION_NON_MEMBERS_DESCRIPTION)
-						.actionGeneral((clickable, itemStack, player1) -> nonMembersGUI.openPlayers(player1)))
+						.actionGeneral((action) -> nonMembersGUI.openPlayers(action.getWho())))
 				.addClickable(25, randomMember(player, faction, Translations.GUI_BUTTON_FACTION_MEMBERS_NAME, Translations.GUI_BUTTON_FACTION_MEMBERS_DESCRIPTION)
-						.actionGeneral(((clickable, itemStack, player1) -> membersGUI.openMembers(player1))))
+						.actionGeneral(((action) -> membersGUI.openMembers(action.getWho()))))
 				.addClickable(44, Clickable.general(ItemStack.of(Material.WRITABLE_BOOK), context -> {
 						}).title(Translations.GUI_FACTION_LEAVE_NAME).description(Translations.GUI_FACTION_LEAVE_DESCRIPTION)
 						.permission(requireNotHaveRole("unity.leave", FactionRole.OWNER)))

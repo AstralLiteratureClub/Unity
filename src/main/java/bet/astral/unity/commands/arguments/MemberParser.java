@@ -1,6 +1,6 @@
 package bet.astral.unity.commands.arguments;
 
-import bet.astral.messenger.v2.cloud.exceptions.TranslationException;
+import bet.astral.messenger.v3.cloud.exceptions.TranslationException;
 import bet.astral.unity.Unity;
 import bet.astral.unity.entity.Faction;
 import bet.astral.unity.messenger.Translations;

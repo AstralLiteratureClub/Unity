@@ -1,8 +1,8 @@
 package bet.astral.unity.bootstrap;
 
-import bet.astral.cloudplusplus.paper.bootstrap.BootstrapCommandRegisterer;
-import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;
-import bet.astral.cloudplusplus.paper.mapper.CommandSourceStackToCommandSenderMapper;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.BootstrapCommandRegisterer;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.BootstrapHandler;
+import bet.astral.cloudplusplus.minecraft.paper.mapper.CommandSourceStackToCommandSenderMapper;
 import bet.astral.messenger.v2.Messenger;
 import bet.astral.messenger.v2.receiver.Receiver;
 import bet.astral.unity.messenger.UnityMessenger;

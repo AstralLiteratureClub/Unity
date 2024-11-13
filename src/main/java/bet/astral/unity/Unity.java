@@ -1,9 +1,9 @@
 package bet.astral.unity;
 
-import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.BootstrapHandler;
 import bet.astral.guiman.GUIMan;
-import bet.astral.messenger.v2.MessageSender;
-import bet.astral.messenger.v2.paper.PaperMessenger;
+import bet.astral.messenger.v2.utils.MessageSender;
+import bet.astral.messenger.v3.minecraft.paper.PaperMessenger;
 import bet.astral.more4j.event.EventManager;
 import bet.astral.shine.Shine;
 import bet.astral.signman.SignGUI;

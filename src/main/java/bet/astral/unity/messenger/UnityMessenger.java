@@ -1,10 +1,10 @@
 package bet.astral.unity.messenger;
 
-import bet.astral.messenger.v2.cloud.CaptionMessenger;
-import bet.astral.messenger.v2.cloud.CloudMessenger;
-import bet.astral.messenger.v2.cloud.paper.locale.CommandSenderLocaleExtractor;
-import bet.astral.messenger.v2.paper.PaperMessenger;
-import bet.astral.messenger.v2.paper.receiver.PlayerReceiver;
+import bet.astral.messenger.v3.cloud.CaptionMessenger;
+import bet.astral.messenger.v3.cloud.CloudMessenger;
+import bet.astral.messenger.v3.minecraft.paper.cloud.locale.CommandSenderLocaleExtractor;
+import bet.astral.messenger.v3.minecraft.paper.PaperMessenger;
+import bet.astral.messenger.v3.minecraft.paper.receiver.PlayerReceiver;
 import bet.astral.messenger.v2.placeholder.Placeholder;
 import bet.astral.messenger.v2.placeholder.collection.PlaceholderList;
 import bet.astral.unity.entity.Faction;

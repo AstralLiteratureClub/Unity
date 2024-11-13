@@ -1,6 +1,6 @@
 package bet.astral.unity.bootstrap;
 
-import bet.astral.cloudplusplus.paper.bootstrap.BootstrapHandler;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.BootstrapHandler;
 import bet.astral.messenger.v2.component.ComponentType;
 import bet.astral.messenger.v2.info.MessageInfoBuilder;
 import bet.astral.messenger.v2.locale.LanguageTable;

@@ -1,7 +1,7 @@
 package bet.astral.unity.commands.faction;
 
 import bet.astral.cloudplusplus.annotations.Cloud;
-import bet.astral.cloudplusplus.paper.bootstrap.InitAfterBootstrap;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.InitAfterBootstrap;
 import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;
 import bet.astral.unity.commands.UnityConfirmableCommand;
 import org.bukkit.command.CommandSender;

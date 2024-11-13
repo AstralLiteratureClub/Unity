@@ -1,7 +1,7 @@
 package bet.astral.unity.commands;
 
-import bet.astral.cloudplusplus.paper.bootstrap.commands.CPPBootstrapConfirmableCommand;
-import bet.astral.messenger.v2.MessageSender;
+import bet.astral.cloudplusplus.minecraft.paper.bootstrap.commands.CPPBootstrapConfirmableCommand;
+import bet.astral.messenger.v2.utils.MessageSender;
 import bet.astral.messenger.v2.Messenger;
 import bet.astral.unity.Unity;
 import bet.astral.unity.bootstrap.UnityCommandBootstrapRegister;

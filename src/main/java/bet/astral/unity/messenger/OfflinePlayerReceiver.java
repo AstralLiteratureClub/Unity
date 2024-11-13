@@ -1,6 +1,6 @@
 package bet.astral.unity.messenger;
 
-import bet.astral.messenger.v2.paper.scheduler.ASyncScheduler;
+import bet.astral.messenger.v3.minecraft.paper.scheduler.ASyncScheduler;
 import bet.astral.messenger.v2.permission.Permission;
 import bet.astral.messenger.v2.receiver.Receiver;
 import bet.astral.messenger.v2.task.IScheduler;
